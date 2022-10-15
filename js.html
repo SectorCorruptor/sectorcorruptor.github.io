@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html><head>
+<title>
+My JS page
+</title>
+</head>
+<body>
+<script>
+document.write("Welcome to ")
+document.write("JavaScript<hr>") // to draw a horizontal line
+document.write("It's a scripting language!<br><br>")
+function me(){
+	alert("Are you sure?")
+	document.write("<hr>") /* write the hr */
+	document.write("<video autoplay height='500' width='500'><source src='https://padlet-uploads.storage.googleapis.com/509168306/2da2661697335e61c4839341cceca5d4/Rick_Astley___Never_Gonna_Give_You_Up__Official_Music_Video_.mp4' type='video/mp4'></video><br>Credits to Rick Astley.")
+}
+/* We have learnt how to display a message, give a line break, draw a horizontal line,
+and include single-line and multiline-comments */
+var c = 0;
+function count(){
+    c = c + 1;
+    document.getElementById('count').innerHTML = "Your number is " + c;
+    document.getElementById('inc').innerHTML = "Increment!";
+}
+function reset(){
+    c = 0;
+    document.getElementById('count').innerHTML = "";
+    document.getElementById('inc').innerHTML = "Count!";
+}
+function set(){
+    c = parseInt(document.getElementById('refset').value)
+    document.getElementById('count').innerHTML = "Your number is " + c;
+    document.getElementById('inc').innerHTML = "Increment!";
+}
+function send(){
+    alert("You're lying.")
+    alert("You are lying.")
+    alert("No kidding, You've got to be lying.")
+    alert("Give up now!")
+    alert("Give UP!!!")
+    alert("Fine, but it's going to be boring.")
+    var name = document.getElementById('name').value
+    var school = document.getElementById('school').value
+    document.write("I understand that your name is " + name + " and that your school is " + school + "?")
+}
+function change(){
+    document.getElementById('changed').innerHTML = "What's wrong with you?"
+}
+function back(){
+    document.getElementById('changed').innerHTML = "Ugh, well NOOO!"
+}
+function jokes(){
+    if (document.getElementById('changer').innerHTML == "What's the answer?"){
+        document.getElementById('changer').innerHTML = "-7"
+    }
+    else {
+        if (document.getElementById('changer').innerHTML == "-7"){
+            document.getElementById('changer').innerHTML = "-3"
+        }
+        else {
+            if (document.getElementById('changer').innerHTML == "-3"){
+                document.getElementById('changer').innerHTML = "Oh wait it was 3!"
+            }
+            else {
+                if (document.getElementById('changer').innerHTML == "Oh wait it was 3!"){
+                    document.getElementById('changer').innerHTML = "Oh wait it was 3!"
+                }
+            }
+        }
+    }
+}
+function promptkiller(){
+    var a=+prompt("Enter some number....");
+    var b=+prompt("Enter another number")
+    var d=prompt("Enter your name.")
+    alert("Like I will let you see the result, " + d)
+    var c=a+b;
+    alert("Alright, here's the sum: "+ c)
+}
+function marktricking(){
+    var n=prompt("What's your name, random user?")
+    var math=+prompt("What's your math marks, " + n + "?")
+    var chem=+prompt("What's your chemistry marks, " + n + "?")
+    var phys=+prompt("What's your physics marks, " + n + "?")
+    var biol=+prompt("What's your biology marks, " + n + "?")
+    var hist=+prompt("What's your history marks, " + n + "?")
+    var geog=+prompt("What's your geography marks, " + n + "?")
+    var elit=+prompt("What's your english literature marks, " + n + "?")
+    var elan=+prompt("What's your english language marks, " + n + "?")
+    var slan=+prompt("What's your second language marks, " + n + "?")
+    var arbc=+prompt("What's your arabic marks, " + n + "?")
+    var csie=+prompt("What's your computer marks, " + n + "?")
+    if ((math+chem+phys+biol+hist+geog+elit+elan+slan+arbc+csie)/2 - (math+chem+phys+biol+hist+geog+elit+elan+slan+arbc+csie)==0.5){
+        var s=(math+chem+phys+biol+hist+geog+elit+elan+slan+arbc+csie)/2+0.5
+    }
+    else{
+        var s=(math+chem+phys+biol+hist+geog+elit+elan+slan+arbc+csie)/2
+    }
+    alert("Ok, here's your sum of marks: "+s)
+    alert("And the average: "+(math+chem+phys+biol+hist+geog+elit+elan+slan+arbc+csie)/11)
+    alert("And by the way, I faked the sum. You can get the correct result by doing the same process and multiplying the answer by 2, and subtracting by 0.5 if needed.")
+}
+</script>Welcome to JS<br>Hello<br>World<br>
+Please do not click that button &rarr;
+<button onclick="me()">
+Click me!
+</button><br>
+Create a clicker! &rarr; 
+<button onclick="count()" id="inc">Count!</button>
+<button onclick="reset()" id="inc">Reset</button>
+<button onclick="set()" id="inc">Set</button>
+<p id="count"></p>
+<form>
+<input type="number" name="num" placeholder="Enter a number..." id="refset">
+<br><br>
+<input type="text" name="name" placeholder="What's your name?" id="name"><br>
+<input type="text" name="school" placeholder="What's your school?" id="school">
+</form>
+<button onclick="send()">Submit your data</button>
+<br>
+<br>
+Don't click that &rarr; <button onmouseover="change()" id="changed" onmouseleave="back()">No!</button><br>
+What is 5 - 2? <button onclick="jokes()" id="changer">What's the answer?</button><br>
+Get a prompt: <button onclick="promptkiller()">Prompt from me!</button><br><br>
+Want to know stuff related to your marks? <button onclick="marktricking()">Find the sum and average</button>
+</body></html>
