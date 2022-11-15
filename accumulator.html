@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+    var code=prompt("Please enter your One Time code:")
+    var accumulator=0
+        for(var x=0;x!=code.length();x++){
+            if(code[x]=="A"){
+                accumulator+=1
+            }
+            else if(code[x]=="M"){
+                accumulator-=1
+            }
+            else if(code[x]=="O"){
+                alert(accumulator)
+            }
+            else{
+                alert("Invalid")
+            }
+        }
+</script>
+</body>
+</html>
