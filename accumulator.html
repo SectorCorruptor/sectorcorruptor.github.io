@@ -2,8 +2,7 @@
 <html>
 <body>
 <script>
-    function interpret(){
-    var code=document.getElementbyId('input').innerHTML
+    var code=prompt("Please enter your One Time code:")
     var accumulator=0
         for(var x=0;x!=code.length;x++){
             if(code[x]=="A"){
@@ -13,7 +12,7 @@
                 accumulator-=1
             }
             else if(code[x]=="O"){
-                document.getElementbyId('output').innerHTML += accumulator + "<br>"
+                alert(accumulator)
             }
             else if(code[x]=="C"){
                 accumulator=parseInt(accumulator.toString()+accumulator.toString())
@@ -22,18 +21,10 @@
                 accumulator=0
             }
             else{
-                document.getElementbyId('output').innerHTML = "Invalid"
-                document.getElementbyId('output').style.color = "red"
+                alert("Invalid")
                 break
             }
         }
-    }
 </script>
-    <p>Code: </p>
-    <input id='input'><br>
-    <p>Output: </p><br>
-    <p id='output'></p>
-    <br><br>
-    <button onclick="interpret()">Run!</button>
 </body>
 </html>
