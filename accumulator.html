@@ -2,29 +2,33 @@
 <html>
 <body>
 <script>
-    var code=prompt("Please enter your One Time code:")
+    var code=prompt("Please enter program:")
     var accumulator=0
-        for(var x=0;x!=code.length;x++){
-            if(code[x]=="A"){
+    for(var x=0;x!=code.length;x++){
+        switch(code[x]){
+            case "A":
                 accumulator+=1
-            }
-            else if(code[x]=="M"){
+                break
+            case "M":
                 accumulator-=1
-            }
-            else if(code[x]=="O"){
-                alert(accumulator)
-            }
-            else if(code[x]=="C"){
+                break
+            case "O":
+                document.write(accumulator)
+                break
+            case "C":
                 accumulator=parseInt(accumulator.toString()+accumulator.toString())
-            }
-            else if(code[x]=="R"){
+                break
+            case "R":
                 accumulator=0
-            }
-            else{
+                break
+            case "U":
+                document.write(String.fromCharCode(accumulator))
+                break
+            default:
                 alert("Invalid")
                 break
-            }
         }
+    }
 </script>
 </body>
 </html>
