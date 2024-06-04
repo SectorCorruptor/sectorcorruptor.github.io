@@ -1,34 +1,106 @@
 <!DOCTYPE html>
 <html>
+<head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+    }
+    textarea, input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+    #output {
+        margin: 20px 0;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background: #f9f9f9;
+    }
+    button {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    h2 {
+        margin-bottom: 10px;
+    }
+</style>
+</head>
 <body>
+<div class="container">
+    <h2>Code Runner</h2>
+    <p>Code:</p>
+    <textarea id="code" rows="5" placeholder="Enter your code here..."></textarea>
+    <p>Input:</p>
+    <input type="number" id="input" placeholder="Enter a number">
+    <button onclick="run()">Run</button>
+    <p>Output:</p>
+    <p id="output"></p>
+</div>
 <script>
-    var code=prompt("Please enter program:")
-    var accumulator=0
-    for(var x=0;x!=code.length;x++){
-        switch(code[x]){
+function run() {
+    var code = document.getElementById("code").value;
+    var inputVal = parseInt(document.getElementById("input").value);
+    var accumulator = isNaN(inputVal) ? 0 : inputVal;
+
+    document.getElementById("output").innerHTML = ""; // Clear previous output
+
+    for (var x = 0; x < code.length; x++) {
+        switch (code[x]) {
             case "A":
-                accumulator+=1
-                break
+                accumulator += 1;
+                break;
             case "M":
-                accumulator-=1
-                break
+                accumulator -= 1;
+                break;
             case "O":
-                document.write(accumulator)
-                break
+                document.getElementById("output").innerHTML += accumulator;
+                break;
             case "C":
-                accumulator=parseInt(accumulator.toString()+accumulator.toString())
-                break
+                accumulator = parseInt(accumulator.toString() + accumulator.toString());
+                break;
             case "R":
-                accumulator=0
-                break
+                accumulator = 0;
+                break;
             case "U":
-                document.write(String.fromCharCode(accumulator))
-                break
+                document.getElementById("output").innerHTML += String.fromCharCode(accumulator);
+                break;
+            case "B":
+                document.getElementById("output").innerHTML = document.getElementById("output").innerHTML.slice(0, -1)
+                break;
             default:
-                alert("Invalid")
-                break
+                alert("Invalid");
+                break;
         }
     }
+}
 </script>
 </body>
 </html>
