@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Emissions Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1a73e8;
+            font-size: 36px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #555;
+        }
+
+        input, select, button {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #1a73e8;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        button:hover {
+            background-color: #1558b0;
+        }
+
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #eef3fd;
+            border-radius: 10px;
+        }
+
+        h2, h3 {
+            color: #333;
+        }
+
+        .rating-system {
+            margin-top: 30px;
+            background-color: #f0f0f5;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .rating-system h3 {
+            margin: 0;
+            color: #1a73e8;
+        }
+
+        .rating-system p {
+            margin-top: 5px;
+            color: #555;
+        }
+
+        .rating-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 16px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .rating-low {
+            background-color: #4caf50;
+        }
+
+        .rating-moderate {
+            background-color: #ff9800;
+        }
+
+        .rating-high {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Car Emissions Calculator</h1>
+        <form id="emissionsForm">
+            <label for="company">Select Car Company:</label>
+            <select id="company" onchange="populateModels()">
+                <option value="">Select a company</option>
+                <option value="Toyota">Toyota</option>
+                <option value="Ford">Ford</option>
+                <option value="BMW">BMW</option>
+                <option value="Honda">Honda</option>
+                <option value="Audi">Audi</option>
+                <option value="Chevrolet">Chevrolet</option>
+                <option value="Mercedes-Benz">Mercedes-Benz</option>
+                <option value="Nissan">Nissan</option>
+                <option value="Hyundai">Hyundai</option>
+                <option value="Volkswagen">Volkswagen</option>
+                <option value="Mazda">Mazda</option>
+                <option value="Subaru">Subaru</option>
+                <option value="Kia">Kia</option>
+                <option value="Peugeot">Peugeot</option>
+                <option value="Volvo">Volvo</option>
+            </select>
+
+            <label for="model">Select Car Model:</label>
+            <select id="model">
+                <option value="">Select a model</option>
+            </select>
+
+            <label for="mileage">Enter Mileage (km/liter):</label>
+            <input type="number" id="mileage" required>
+
+            <label for="distance">Enter Kilometers Traveled:</label>
+            <input type="number" id="distance" required>
+
+            <button type="button" onclick="calculateEmissions()">Calculate Emissions</button>
+        </form>
+
+        <div id="results " style="display: none;">
+            <h2>Emissions Result</h2>
+            <p id="emissionsOutput"></p>
+            <p id="ratingOutput"></p>
+            <h3>Environmental Impact Summary</h3>
+            <p id="impactSummary"></p>
+        </div>
+
+        <div class="rating-system">
+            <h3>How the Rating System Works</h3>
+            <p><strong>Low Emissions (0-50):</strong> These vehicles are eco-friendly with lower fuel consumption and reduced CO₂ emissions.</p>
+            <p><strong>Moderate Emissions (51-80):</strong> These vehicles are moderately eco-friendly with decent fuel efficiency but may produce more emissions than compact or hybrid cars.</p>
+            <p><strong>High Emissions (81-100):</strong> These vehicles have high fuel consumption and CO₂ emissions, typically including larger, more powerful cars like trucks and SUVs.</p>
+        </div>
+    </div>
+
+    <script>
+        const carModels = {
+            Toyota: ['Prius', 'Corolla', 'Camry', 'Highlander', 'Land Cruiser', 'RAV4', 'Avalon', 'Yaris', 'C-HR', 'Tacoma'],
+            Ford: ['Mustang', 'Fiesta', 'Focus', 'F-150', 'Edge', 'Escape', 'Explorer', 'Ranger', 'Fusion', 'Taurus'],
+            BMW: ['3 Series', '5 Series', '7 Series', 'X1', 'X3', 'X5', 'i3', 'i8', 'Z4', 'M3'],
+            Honda: ['Civic', 'Accord', 'CR-V', 'Fit', 'Odyssey', 'Pilot', 'Ridgeline', 'Insight', 'HR-V', 'Passport'],
+            Audi: ['A3', 'A4', 'A6', 'Q3', 'Q5', 'Q7', 'Q8', 'TT', 'R8', 'S3'],
+            Chevrolet: ['Camaro', 'Silverado', 'Malibu', 'Colorado', 'Tahoe', 'Suburban', 'Bolt EV', 'Equinox', 'Impala', 'Blazer'],
+            'Mercedes-Benz': ['A-Class', 'C-Class', 'E-Class', 'S-Class', 'GLA', 'GLC', 'GLE', 'GLS', 'AMG GT', 'Sprinter'],
+            Nissan: ['Altima', 'Maxima', 'Murano', 'Pathfinder', 'Rogue', 'Sentra', 'Versa', 'Titan', 'Leaf', '370Z'],
+            Hyundai: ['Elantra', 'Sonata', 'Santa Fe', 'Tucson', 'Kona', 'Veloster', 'Palisade', 'Ioniq', 'Venue', 'Accent'],
+            Volkswagen: ['Golf', 'Jetta', 'Passat', 'Tiguan', 'Atlas', 'Arteon', 'Beetle', 'ID.4', 'Polo', 'T-Roc'],
+            Mazda: ['Mazda3', 'Mazda6', 'CX-3', 'CX-5', 'CX-9', 'MX-5 Miata', 'CX-30', 'BT-50', 'CX-50', 'Mazda2'],
+            Subaru: ['Impreza', 'Forester', 'Outback', 'Legacy', 'Ascent', 'Crosstrek', 'WRX', 'BRZ', 'Levorg', 'XV'],
+            Kia: ['Rio', 'Soul', 'Seltos', 'Sportage', 'Sorento', 'Telluride', 'Optima', 'Stinger', 'Niro', 'Carnival'],
+            Peugeot: ['208', '308', '508', '3008', '5008', '2008', 'Rifter', 'Traveller', 'Partner', 'Expert'],
+            Volvo: ['S60', 'S90', 'XC40', 'XC60', 'XC90', 'V60', 'V90', 'C40', 'V40', 'V70']
+        };
+
+        const environmentalSummaries = {
+            Prius: {note: "The Toyota Prius is known for its hybrid technology, offering excellent fuel efficiency and low emissions.", rating: 30},
+            Corolla: {note: "The Toyota Corolla is a fuel-efficient sedan, offering relatively low emissions and a good choice for eco-conscious drivers.", rating: 45},
+            Camry: {note: "While more powerful than smaller sedans, the Camry offers balanced performance with reasonable fuel efficiency, especially in hybrid form.", rating: 55},
+            Highlander: {note: "The Toyota Highlander, particularly the hybrid, is a good option for reducing emissions in the SUV class.", rating: 60},
+            'Land Cruiser': {note: "The Toyota Land Cruiser is a large SUV with high fuel consumption, contributing to increased emissions.", rating: 85},
+            RAV4: {note: "The RAV4 Hybrid model offers excellent fuel economy for an SUV, reducing fuel consumption and emissions.", rating: 50},
+            Avalon: {note: "The Toyota Avalon is a larger sedan, but its hybrid version helps lower emissions significantly.", rating: 55},
+            Yaris: {note: "The Toyota Yaris is a compact, fuel-efficient car, making it a top choice for reducing carbon emissions.", rating: 40},
+            'C-HR': {note: "The C-HR is a compact crossover with good fuel efficiency, though its emissions are higher compared to hybrid vehicles.", rating: 60},
+            Tacoma: {note: "The Toyota Tacoma is a pickup truck with higher emissions due to its power and size, making it less eco-friendly.", rating: 80},
+
+            Mustang: {note: "The Ford Mustang is a high-performance car with a powerful engine, leading to higher fuel consumption and emissions.", rating: 90},
+            Fiesta: {note: "The Ford Fiesta is a small, fuel-efficient car, making it an eco-friendlier choice for city driving.", rating: 45},
+            Focus: {note: "The Ford Focus, especially in hybrid models, offers good fuel efficiency and lower emissions.", rating: 50},
+            'F-150': {note: "The Ford F-150 is a full-size truck with high fuel consumption, contributing significantly to CO₂ emissions.", rating: 85},
+            Edge: {note: "The Ford Edge is a midsize SUV with moderate fuel efficiency, but it produces higher emissions than smaller vehicles.", rating: 70},
+            Escape: {note: "The Ford Escape Hybrid offers good fuel economy, making it a greener option in the compact SUV category.", rating: 55},
+            Explorer: {note: "The Ford Explorer hybrid reduces fuel consumption for a large SUV but still contributes significantly to emissions.", rating: 75},
+            Ranger: {note: "The Ford Ranger is more fuel-efficient than full-size trucks but still has higher emissions than most sedans.", rating: 65},
+            Fusion: {note: "The Ford Fusion Hybrid is a fuel-efficient sedan that helps reduce CO₂ emissions.", rating: 50},
+            Taurus: {note: "The Ford Taurus is a large sedan with moderate fuel consumption and emissions.", rating: 60},
+
+            '3 Series': {note: "The BMW 3 Series is a compact luxury sedan with moderate fuel efficiency and emissions.", rating: 60},
+            '5 Series': {note: "The BMW 5 Series is a midsize luxury sedan with moderate fuel efficiency and emissions.", rating: 65},
+            '7 Series': {note: "The BMW 7 Series is a full-size luxury sedan with high fuel consumption and emissions.", rating: 80},
+            X1: {note: "The BMW X1 is a compact luxury SUV with moderate fuel efficiency and emissions.", rating: 60},
+            X3: {note: "The BMW X3 is a compact luxury SUV with moderate fuel efficiency and emissions.", rating: 60},
+            X5: {note: "The BMW X5 is a midsize luxury SUV with moderate fuel efficiency and emissions.", rating: 65},
+            i3: {note: "The BMW i3 is an electric car with zero emissions, making it an eco-friendly choice.", rating: 0},
+            i8: {note: "The BMW i8 is a hybrid sports car with low emissions, making it a greener option in its class.", rating: 40},
+            Z4: {note: "The BMW Z4 is a convertible sports car with moderate fuel efficiency and emissions.", rating: 60},
+            M3: {note: "The BMW M3 is a high-performance car with a powerful engine, leading to higher fuel consumption and emissions.", rating: 85},
+        };
+
+        function populateModels() {
+            const company = document.getElementById('company').value;
+            const modelSelect = document.getElementById('model');
+            modelSelect.innerHTML = '<option value="">Select a model</option>'; // Reset model options
+
+            if (carModels[company]) {
+                carModels[company].forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.text = model;
+                    modelSelect.appendChild(option);
+                });
+            }
+        }
+
+        function calculateEmissions() {
+            const mileage = document.getElementById('mileage').value;
+            const distance = document.getElementById('distance').value;
+            const company = document.getElementById('company').value;
+            const model = document.getElementById('model').value;
+            
+            if (!company || !model || !mileage || !distance) {
+                alert('Please fill in all fields!');
+                return;
+            }
+
+            // Example formula for CO2 emissions
+            const litersUsed = distance / mileage;
+            const co2PerLiter = 2.31; // Approximate CO2 in kg per liter of gasoline
+            const totalCO2 = litersUsed * co2PerLiter;
+
+            // Output emissions result
+            document.getElementById('emissionsOutput').innerHTML = `Your car emitted approximately ${totalCO2.toFixed(2)} kg of CO2.`;
+
+            // Rating system
+            const summary = environmentalSummaries[model] || {note: "This car has moderate fuel efficiency and emissions impact.", rating: 60};
+            const ratingBadge = getRatingBadge(summary.rating);
+            document.getElementById('ratingOutput').innerHTML = `Environmental Impact: ${summary.rating}/100. <span class="rating-badge ${ratingBadge.class}">${ratingBadge.text}</span>`;
+
+            // Environmental impact summary based on the car model
+            document.getElementById('impactSummary').innerHTML = summary.note;
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function getRatingBadge(rating) {
+            if (rating <= 50) {
+                return {class: 'rating-low', text: 'Low Emissions'};
+            } else if (rating <= 80) {
+                return {class: 'rating-moderate', text: 'Moderate Emissions'};
+            } else {
+                return {class: 'rating-high', text: 'High Emissions'};
+            }
+        }
+    </script>
+</body>
+</html>
