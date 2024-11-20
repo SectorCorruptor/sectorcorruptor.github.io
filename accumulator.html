@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+<title>ACCUMULATOR</title>
 <style>
     body {
-        font-family: Arial, sans-serif;
+        font-family: 'Lucida Console', Arial, sans-serif;
         background-color: #f4f4f9;
         margin: 0;
         padding: 0;
@@ -67,6 +68,7 @@
     <button onclick="run()">Run</button>
     <p>Output:</p>
     <p id="output"></p>
+    <p id="info"></p>
 </div>
 <script>
 function run() {
@@ -76,7 +78,8 @@ function run() {
 
     document.getElementById("output").innerHTML = ""; // Clear previous output
 
-    for (var x = 0; x < code.length; x++) {
+    var startTime = Date.now();
+    for (var x = 0;x < code.length;x++) {
         switch (code[x]) {
             case "A":
                 accumulator += 1;
@@ -99,9 +102,55 @@ function run() {
             case "B":
                 document.getElementById("output").innerHTML = document.getElementById("output").innerHTML.slice(0, -1)
                 break;
+            case "E":
+                var teval = "";
+                for(var n=0;n<accumulator;n++){
+                  teval = teval.concat(document.getElementById("output").innerHTML.charAt(n))
+                }
+                var prev = "";
+                for(var n=0;n<x;n++){
+                    prev = prev.concat(code[n]);
+                }
+                var apres = "";
+                for(var n=x+1;n<code.length;n++){
+                    apres = apres.concat(code[n]);
+                }
+                code = prev + teval + apres;
+                switch (code[x]){
+                    case "A":
+                        accumulator += 1;
+                        break;
+                    case "M":
+                        accumulator -= 1;
+                        break;
+                    case "O":
+                        document.getElementById("output").innerHTML += accumulator;
+                        break;
+                    case "C":
+                        accumulator = parseInt(accumulator.toString() + accumulator.toString());
+                        break;
+                    case "R":
+                        accumulator = 0;
+                        break;
+                    case "U":
+                        document.getElementById("output").innerHTML += String.fromCharCode(accumulator);
+                        break;
+                    case "B":
+                        document.getElementById("output").innerHTML = document.getElementById("output").innerHTML.slice(0, -1)
+                        break;
+                    case "E":
+                        document.getElementById("info").innerHTML = "Code terminated to avoid recursive overflow";
+                    default:
+                        alert("Invalid");
+                }
+                break;
             default:
                 alert("Invalid");
                 break;
+        }
+        if(Date.now()-startTime > 5000){
+            document.getElementById('info').innerHTML = "Code exceeded time limit";
+            break;
         }
     }
 }
