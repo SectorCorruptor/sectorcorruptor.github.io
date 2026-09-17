@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ascension Archive — Your MYP Survival Guide</title>
+<meta name="description" content="A student's guide to surviving and thriving through the IB Middle Years Programme.">
+
+<!-- Google Fonts: Fraunces for headings, Inter for body -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar" id="navbar">
+  <div class="navbar__inner">
+    <a href="#home" class="navbar__brand">Ascension&nbsp;Archive</a>
+    <nav class="navbar__links">
+      <a href="#home" data-nav>Home</a>
+      <a href="#transitions" data-nav>Classes &amp; Tracks</a>
+      <a href="#subject-quiz" data-nav>Subject Quiz</a>
+      <a href="#footer" data-nav>Help</a>
+    </nav>
+    <button class="navbar__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+  <nav class="navbar__mobile" id="navMobile">
+    <a href="#home" data-nav>Home</a>
+    <a href="#transitions" data-nav>Classes &amp; Tracks</a>
+    <a href="#subject-quiz" data-nav>Subject Quiz</a>
+    <a href="#footer" data-nav>Help</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============ HOME / HERO ============ -->
+<section id="home" class="section hero">
+  <div class="glow glow--azure hero__glow-a" aria-hidden="true"></div>
+  <div class="glow glow--cyan hero__glow-b" aria-hidden="true"></div>
+
+  <div class="section__inner hero__inner">
+    <p class="eyebrow">A student's field guide to the middle years</p>
+    <h1 class="hero__headline">Find your path through the <em>Middle Years</em>.</h1>
+    <p class="hero__sub">Big changes are coming — new teachers, new subjects, real choices. This guide shows you what's ahead, what stays the same, and exactly what to do first. Tap a phase to begin.</p>
+
+    <div class="phase-cards" id="phaseCards">
+      <button class="phase-card" data-target="leap" style="--grad-a:#0055FF; --grad-b:#00D1FF;">
+        <span class="phase-card__art" aria-hidden="true"></span>
+        <span class="phase-card__label">The Leap</span>
+        <span class="phase-card__tag">MYP 1</span>
+        <span class="phase-card__blurb">New school, new subjects, way more teachers. Here's how to handle the jump — and actually enjoy it.</span>
+      </button>
+
+      <button class="phase-card" data-target="bridge" style="--grad-a:#00D1FF; --grad-b:#0055FF;">
+        <span class="phase-card__art" aria-hidden="true"></span>
+        <span class="phase-card__label">The Bridge</span>
+        <span class="phase-card__tag">MYP 2 → 3</span>
+        <span class="phase-card__blurb">Year 3 is where school gets real — bigger tasks, more independence, and your first look at the choices ahead.</span>
+      </button>
+
+      <button class="phase-card" data-target="choice" style="--grad-a:#0033AA; --grad-b:#00D1FF;">
+        <span class="phase-card__art" aria-hidden="true"></span>
+        <span class="phase-card__label">The Choice</span>
+        <span class="phase-card__tag">MYP 3 → 4</span>
+        <span class="phase-card__blurb">Time to pick your subjects! Learn how it works, which doors stay open, and how to choose without stressing.</span>
+      </button>
+    </div>
+
+    <div class="year-picker">
+      <p class="year-picker__prompt">What year are you in?</p>
+      <div class="year-picker__buttons" id="yearButtons">
+        <button data-year="1">MYP 1</button>
+        <button data-year="2">MYP 2</button>
+        <button data-year="3">MYP 3</button>
+        <button data-year="4">MYP 4</button>
+        <button data-year="5">MYP 5</button>
+      </div>
+      <p class="year-picker__result" id="yearResult" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRANSITIONS ============ -->
+<section id="transitions" class="section transitions">
+  <div class="glow glow--cyan transitions__glow" aria-hidden="true"></div>
+  <div class="section__inner">
+    <p class="eyebrow">Classes &amp; Tracks</p>
+    <h2 class="section__title">Every transition, mapped out.</h2>
+
+    <div class="tabs" id="tabs" role="tablist">
+      <button class="tabs__btn is-active" data-tab="leap" role="tab" aria-selected="true">The Leap · MYP 1</button>
+      <button class="tabs__btn" data-tab="bridge" role="tab" aria-selected="false">The Bridge · MYP 2→3</button>
+      <button class="tabs__btn" data-tab="choice" role="tab" aria-selected="false">The Choice · MYP 3→4</button>
+    </div>
+
+    <!-- ---- TAB: THE LEAP ---- -->
+    <article class="tab-panel is-active" id="panel-leap" role="tabpanel">
+      <div class="panel-grid">
+        <div class="panel-art panel-art--leap" aria-hidden="true"></div>
+        <div class="panel-copy">
+          <p>You're walking into a bigger building with a bigger timetable. Instead of one classroom and one teacher, you'll move between rooms and meet six, seven, maybe eight different teachers — one for each subject group. It's a lot at first. By week three, it'll just feel like Tuesday.</p>
+          <blockquote class="pull-quote">"You don't need to have it figured out on day one. You just need a planner and a decent night's sleep."</blockquote>
+        </div>
+      </div>
+
+      <div class="fact-lists">
+        <div class="fact-list">
+          <h3>What Changes</h3>
+          <ul>
+            <li>You'll have a different teacher and room for most subjects.</li>
+            <li>Grades become criteria-based — you're scored on skills labelled A, B, C, D, not one overall mark.</li>
+            <li>You get a planner (paper or app) and start building ATL skills — that's "learning how to learn," like organizing your time.</li>
+            <li>Homework comes from several teachers at once, so deadlines can stack up.</li>
+          </ul>
+        </div>
+        <div class="fact-list">
+          <h3>What Stays the Same</h3>
+          <ul>
+            <li>You still learn through inquiry-based units built around a big question.</li>
+            <li>You're still studying all eight MYP subject groups.</li>
+            <li>Service as Action — helping your community — continues, just like before.</li>
+            <li>Group work, projects, and hands-on learning are still the norm.</li>
+          </ul>
+        </div>
+        <div class="fact-list">
+          <h3>Your First 30 Days</h3>
+          <ul class="timeline-list">
+            <li><span>Week 1</span>Write every teacher's name and room number in one place. Set up your planner.</li>
+            <li><span>Week 2</span>Find one subject that feels tricky and ask a teacher one specific question about it.</li>
+            <li><span>Week 3</span>Start a "due dates" habit — check your planner every evening, even for five seconds.</li>
+            <li><span>Week 4</span>Look back at your first graded task. Notice one thing you'd do differently next time.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="games">
+        <!-- MYTH OR REALITY -->
+        <div class="game" id="mythGame">
+          <h3>Myth or Reality?</h3>
+          <p class="game__intro">Tap a card. Guess if it's a myth or the real deal about MYP 1.</p>
+          <div class="myth-progress">Revealed: <span id="mythProgress">0</span> / <span id="mythTotal">0</span></div>
+          <div class="myth-grid" id="mythGrid"></div>
+          <p class="game__msg" id="mythMsg" aria-live="polite"></p>
+          <button class="btn btn--ghost" id="mythReset">Reset cards</button>
+        </div>
+
+        <!-- MEMORY MATCH -->
+        <div class="game" id="memoryGame">
+          <h3>Term Match</h3>
+          <p class="game__intro">Flip two cards at a time. Match each MYP term to its meaning.</p>
+          <div class="memory-stats">Moves: <span id="memoryMoves">0</span> · Matched: <span id="memoryMatched">0</span>/<span id="memoryTotal">0</span></div>
+          <div class="memory-grid" id="memoryGrid"></div>
+          <p class="game__msg" id="memoryMsg" aria-live="polite"></p>
+          <button class="btn btn--ghost" id="memoryReplay">Replay</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- ---- TAB: THE BRIDGE ---- -->
+    <article class="tab-panel" id="panel-bridge" role="tabpanel">
+      <div class="panel-grid">
+        <div class="panel-art panel-art--bridge" aria-hidden="true"></div>
+        <div class="panel-copy">
+          <p>MYP 3 is the year the training wheels come off. Tasks get longer, teachers expect you to plan your own time, and — quietly, in the background — the subject choices ahead of you start taking shape. Nothing to panic about. Just something to notice.</p>
+          <blockquote class="pull-quote">"Bigger tasks aren't a punishment. They're practice for choosing your own path."</blockquote>
+        </div>
+      </div>
+
+      <div class="fact-lists">
+        <div class="fact-list">
+          <h3>What Changes</h3>
+          <ul>
+            <li>Assignments get longer and span more weeks — you'll need to break them into chunks yourself.</li>
+            <li>Teachers expect more independence: fewer reminders, more "you've got this."</li>
+            <li>You'll do a mini practice run of independent research, warming you up for the real Personal Project later.</li>
+            <li>Subject options for MYP 4–5 start getting mentioned — worth paying attention to.</li>
+          </ul>
+        </div>
+        <div class="fact-list">
+          <h3>What Stays the Same</h3>
+          <ul>
+            <li>Still eight subject groups, still criteria-based grading.</li>
+            <li>Still inquiry-based units with a central big idea.</li>
+            <li>ATL skills and Service as Action keep going, now at a higher gear.</li>
+          </ul>
+        </div>
+        <div class="fact-list">
+          <h3>Your First 30 Days</h3>
+          <ul class="timeline-list">
+            <li><span>Week 1</span>Look at your longest assignment and split it into three smaller deadlines.</li>
+            <li><span>Week 2</span>Ask a teacher what "independent work" looks like in their class.</li>
+            <li><span>Week 3</span>Start noticing which subjects you actually enjoy — you'll want that later.</li>
+            <li><span>Week 4</span>Try planning one whole week in advance instead of day by day.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="games">
+        <!-- HABIT STACK -->
+        <div class="game" id="habitGame">
+          <h3>Habit Stack</h3>
+          <p class="game__intro">Tap each habit once you're doing it. Watch your bridge-readiness grow.</p>
+          <div class="habit-list" id="habitList"></div>
+          <div class="progress-bar"><div class="progress-bar__fill" id="habitFill"></div></div>
+          <p class="game__msg" id="habitMsg" aria-live="polite"></p>
+        </div>
+
+        <!-- BUILD THE BRIDGE QUIZ -->
+        <div class="game" id="bridgeGame">
+          <h3>Build the Bridge</h3>
+          <p class="game__intro">Answer each question right to lay a plank. Get all four to cross.</p>
+          <div class="plank-track" id="plankTrack">
+            <div class="plank" data-plank="1"></div>
+            <div class="plank" data-plank="2"></div>
+            <div class="plank" data-plank="3"></div>
+            <div class="plank" data-plank="4"></div>
+            <div class="plank-figure" id="plankFigure">🧑‍🎓</div>
+          </div>
+          <div id="bridgeQuizArea"></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ---- TAB: THE CHOICE ---- -->
+    <article class="tab-panel" id="panel-choice" role="tabpanel">
+      <div class="panel-grid">
+        <div class="panel-art panel-art--choice" aria-hidden="true"></div>
+        <div class="panel-copy">
+          <p>Welcome to the big one. At the end of MYP 3, you'll choose a subject pathway for MYP 4–5: Balanced or Sciences. It's not a life sentence — it's a direction. Most doors stay open either way, as long as you know which ones you're walking through.</p>
+          <blockquote class="pull-quote">"Pick the pathway that fits how you like to think, not the one you think sounds impressive."</blockquote>
+        </div>
+      </div>
+
+      <div class="fact-lists">
+        <div class="fact-list">
+          <h3>What Changes</h3>
+          <ul>
+            <li>You pick a pathway: Balanced or Sciences, shaping which subject options you take.</li>
+            <li>Fewer subjects overall, but each one goes deeper.</li>
+            <li>Your choices start connecting to what comes after the MYP, like the Diploma Programme.</li>
+          </ul>
+        </div>
+        <div class="fact-list">
+          <h3>What Stays the Same</h3>
+          <ul>
+            <li>You still take Language & Literature, Language Acquisition, and Maths no matter what.</li>
+            <li>Criteria-based grading and ATL skills continue as normal.</li>
+            <li>You can still switch focus later — this isn't permanent.</li>
+          </ul>
+        </div>
+        <div class="fact-list">
+          <h3>Your First 30 Days</h3>
+          <ul class="timeline-list">
+            <li><span>Week 1</span>List three subjects you look forward to and three you'd rather skip.</li>
+            <li><span>Week 2</span>Try the "Which Doors Stay Open?" checker below with a career idea you're curious about.</li>
+            <li><span>Week 3</span>Talk to a teacher or counselor about the pathway you're leaning toward.</li>
+            <li><span>Week 4</span>Take the full Subject Quiz further down this page.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="games">
+        <!-- DOORS CHECKER -->
+        <div class="game" id="doorsGame">
+          <h3>Which Doors Stay Open?</h3>
+          <p class="game__intro">Tap a future field you're curious about.</p>
+          <div class="doors-grid" id="doorsGrid"></div>
+          <div class="doors-result" id="doorsResult" aria-live="polite"></div>
+        </div>
+
+        <!-- DOES IT WORK -->
+        <div class="game" id="worksGame">
+          <h3>Does It Work?</h3>
+          <p class="game__intro">Guess if each subject combo fits a real MYP pathway.</p>
+          <div id="worksArea"></div>
+          <div class="game__score" id="worksScore"></div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ============ SUBJECT QUIZ ============ -->
+<section id="subject-quiz" class="section subject-quiz">
+  <div class="glow glow--azure subject-quiz__glow" aria-hidden="true"></div>
+  <div class="section__inner">
+    <p class="eyebrow">MYP 4–5 subject selection</p>
+    <h2 class="section__title">Two pathways, four questions — find the subject mix that fits you.</h2>
+
+    <!-- STEP 1: pathway choice -->
+    <div class="sq-step is-active" id="sqStepPathway">
+      <div class="pathway-grid">
+        <button class="pathway-card" data-pathway="balanced">
+          <h3>Balanced</h3>
+          <p>Two sciences, two humanities, one arts/PHE, one design/PHE.</p>
+          <span class="pathway-card__tag">Most doors open</span>
+        </button>
+        <button class="pathway-card" data-pathway="sciences">
+          <h3>Sciences</h3>
+          <p>All three sciences, two humanities, one arts/design.</p>
+          <span class="pathway-card__tag">For medicine, engineering, or pure science</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2: preference questions -->
+    <div class="sq-step" id="sqStepQuestions">
+      <div class="sq-question" id="sqQuestion"></div>
+      <div class="sq-nav">
+        <button class="btn btn--ghost" id="sqBack">Back</button>
+        <span class="sq-progress" id="sqProgress"></span>
+      </div>
+    </div>
+
+    <!-- STEP 3: results -->
+    <div class="sq-step" id="sqStepResults">
+      <h3>Your personalized recommendations</h3>
+      <div class="sq-results" id="sqResults"></div>
+      <button class="btn btn--primary" id="sqToBuilder">Build my plan →</button>
+      <button class="btn btn--ghost" id="sqRetake">Retake quiz</button>
+    </div>
+
+    <!-- STEP 4: manual builder -->
+    <div class="sq-step" id="sqStepBuilder">
+      <h3>Build your plan</h3>
+      <p class="game__intro" id="builderRules"></p>
+
+      <div class="progress-bar progress-bar--builder"><div class="progress-bar__fill" id="builderFill"></div></div>
+      <p class="builder-status" id="builderStatus" aria-live="polite"></p>
+
+      <div class="builder-groups" id="builderGroups"></div>
+
+      <div class="builder-actions">
+        <button class="btn btn--primary" id="builderDownload" disabled>Download my plan</button>
+        <button class="btn btn--ghost" id="builderReset">Reset</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER / HELPFUL TIPS ============ -->
+<footer id="footer" class="footer">
+  <div class="glow glow--azure footer__glow-a" aria-hidden="true"></div>
+  <div class="glow glow--cyan footer__glow-b" aria-hidden="true"></div>
+
+  <div class="section__inner footer__inner">
+    <p class="eyebrow eyebrow--dark">Helpful Tips</p>
+    <h2 class="section__title section__title--light">Stuck on something? Start here.</h2>
+
+    <div class="footer-grid">
+      <!-- FAQ -->
+      <div class="faq">
+        <label class="faq__label" for="faqSearch">Search the MYP knowledge base</label>
+        <input type="search" id="faqSearch" class="faq__input" placeholder="Try “Personal Project” or “grading”…">
+        <div class="faq__chips" id="faqChips"></div>
+        <div class="faq__list" id="faqList"></div>
+        <p class="faq__empty" id="faqEmpty" hidden>No matches yet. Try a different word, like "grading" or "service."</p>
+      </div>
+
+      <!-- TIP SHUFFLER + LINKS -->
+      <div class="footer-side">
+        <div class="tip-shuffler">
+          <h3>Study Tip Shuffler</h3>
+          <p class="tip-shuffler__tip" id="tipText" aria-live="polite"></p>
+          <button class="btn btn--outline" id="tipShuffle">Give me another one</button>
+        </div>
+
+        <div class="footer-links">
+          <h3>Jump around</h3>
+          <a href="#home" data-nav>Home</a>
+          <a href="#transitions" data-nav>Classes &amp; Tracks</a>
+          <a href="#subject-quiz" data-nav>Subject Quiz</a>
+        </div>
+
+        <div class="footer-links">
+          <h3>Official IB resources</h3>
+          <a href="https://www.ibo.org/programmes/middle-years-programme/" target="_blank" rel="noopener">IB MYP framework</a>
+          <a href="https://www.ibo.org/programmes/middle-years-programme/curriculum/" target="_blank" rel="noopener">MYP curriculum overview</a>
+        </div>
+      </div>
+    </div>
+
+    <p class="disclaimer">An independent student guide · Not affiliated with the International Baccalaureate Organization.</p>
+  </div>
+</footer>
+
+<!-- ============ CHATBOT WIDGET ============ -->
+<div class="chatbot" id="chatbot">
+  <button class="chatbot__toggle" id="chatbotToggle" aria-expanded="false" aria-controls="chatbotPanel" aria-label="Open the Ascension Archive assistant">
+    <svg class="chatbot__icon chatbot__icon--open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+    </svg>
+    <svg class="chatbot__icon chatbot__icon--close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+
+  <div class="chatbot__panel" id="chatbotPanel" role="dialog" aria-label="Ascension Archive assistant" aria-hidden="true">
+    <div class="chatbot__header">
+      <div>
+        <p class="chatbot__title">Ask the Archive</p>
+        <p class="chatbot__subtitle">Answers pulled from this site, via Gemini</p>
+      </div>
+      <button class="chatbot__close" id="chatbotClose" aria-label="Close chat">✕</button>
+    </div>
+
+    <div class="chatbot__messages" id="chatbotMessages"></div>
+
+    <form class="chatbot__form" id="chatbotForm">
+      <input type="text" id="chatbotInput" class="chatbot__input"
+             placeholder="Ask about grading, the Personal Project, subject choices…" autocomplete="off">
+      <button type="submit" class="chatbot__send" id="chatbotSend" aria-label="Send message">➤</button>
+    </form>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
