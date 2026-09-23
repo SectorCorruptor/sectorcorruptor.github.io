@@ -408,9 +408,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const doorsData = {
     'Medicine': { pathway: 'Sciences', note: 'Medicine leans heavily on Biology and Chemistry, so the Sciences pathway keeps this door widest open — though a strong Balanced pathway can still work with the right choices.' },
     'Engineering': { pathway: 'Sciences', note: 'Physics and Maths matter most here. Sciences gives you the deepest prep, especially for Physics-heavy DP courses later.' },
-    'Business': { pathway: 'Balanced', note: 'Business leans on Economics and communication skills. Balanced keeps your humanities strong while still leaving science options open.' },
+    'Business': { pathway: 'Balanced', note: 'Business leans on Business Studies, Economics and communication skills. Balanced keeps your humanities strong while still leaving science options open.' },
     'Art & Design': { pathway: 'Balanced', note: 'Balanced guarantees you an arts or design slot — exactly what a creative path needs, without giving up everything else.' },
-    'Law': { pathway: 'Balanced', note: 'Law wants strong humanities and communication. Balanced keeps Global Politics, History, or Economics well within reach.' },
+    'Law': { pathway: 'Balanced', note: 'Law wants strong humanities and communication. Balanced keeps Business Studies, History, or Economics well within reach.' },
     'Computer Science': { pathway: 'Sciences', note: 'Physics and Maths are your best friends here. Sciences fits well, though Balanced can too if you pair it with Digital Design.' },
     'Psychology': { pathway: 'Balanced', note: 'Psychology mixes science and humanities. Balanced keeps both a science and a humanities door open at once.' }
   };
@@ -479,30 +479,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* ===========================================================
      SUBJECT QUIZ (MYP 4–5)
+     Flow: intro → 4 questions → results (recommended pathway,
+     with a switch to peek at the other one) → builder.
      =========================================================== */
   const subjectMeta = {
     'Biology': 'sciences', 'Chemistry': 'sciences', 'Physics': 'sciences',
-    'History': 'humanities', 'Geography': 'humanities', 'Economics': 'humanities', 'Global Politics': 'humanities',
+    'History': 'humanities', 'Geography': 'humanities', 'Economics': 'humanities', 'Business Studies': 'humanities',
     'Visual Arts': 'arts', 'Music': 'arts', 'Drama': 'arts',
-    'Digital Design': 'design', 'Product Design': 'design',
+    'Digital Design': 'design', 'Integrated Design': 'design',
     'Physical & Health Education': 'phe'
   };
+  const SCIENCES = ['Biology', 'Chemistry', 'Physics'];
 
   const sqQuestions = [
     {
-      q: 'Which classroom sounds most like you?',
+      q: 'Which kind of classroom actually feels like you?',
       options: [
-        { text: 'Running experiments and figuring out why things happen', scores: { Biology: 2, Chemistry: 2, Physics: 1 } },
-        { text: 'Debating big issues and how the world works', scores: { History: 2, 'Global Politics': 2, Economics: 1 } },
-        { text: 'Making something with your hands or your imagination', scores: { 'Visual Arts': 2, 'Digital Design': 2, 'Product Design': 1 } },
-        { text: 'Moving, building, or being active as you learn', scores: { 'Physical & Health Education': 2, 'Product Design': 1 } }
+        { text: 'Running experiments and figuring out why things happen.', scores: { Biology: 2, Chemistry: 2, Physics: 1 } },
+        { text: 'Debating or arguing about the way the world works.', scores: { History: 2, 'Business Studies': 1, Economics: 1, Geography: 1 } },
+        { text: 'Creating things with your hands and ideas.', scores: { 'Visual Arts': 2, 'Digital Design': 2, 'Integrated Design': 1 } },
+        { text: 'Learning by moving and building.', scores: { 'Physical & Health Education': 2, 'Integrated Design': 1 } }
       ]
     },
     {
       q: 'What do you do in your free time?',
       options: [
         { text: 'Watch documentaries or take things apart to see how they work', scores: { Physics: 2, Chemistry: 1, 'Digital Design': 1 } },
-        { text: 'Follow the news, read, or argue about current events', scores: { 'Global Politics': 2, Economics: 1, History: 1 } },
+        { text: 'Follow the news, read, or argue about current events', scores: { History: 2, Economics: 1, 'Business Studies': 1 } },
         { text: 'Draw, play music, act, or make videos', scores: { Music: 2, Drama: 2, 'Visual Arts': 1 } },
         { text: 'Play sport or just move around a lot', scores: { 'Physical & Health Education': 3 } }
       ]
@@ -510,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
     {
       q: 'How do you solve a hard problem?',
       options: [
-        { text: 'Test a few ideas and see what actually happens', scores: { Biology: 2, Chemistry: 1, 'Product Design': 1 } },
+        { text: 'Test a few ideas and see what actually happens', scores: { Biology: 2, Chemistry: 1, 'Integrated Design': 1 } },
         { text: 'Look at the bigger picture and who it affects', scores: { Economics: 2, Geography: 2 } },
         { text: 'Sketch it out or think visually', scores: { 'Visual Arts': 2, 'Digital Design': 2 } },
         { text: 'Just start moving and figure it out as you go', scores: { 'Physical & Health Education': 2, Drama: 1 } }
@@ -520,12 +523,28 @@ document.addEventListener('DOMContentLoaded', () => {
       q: 'Picture life after the MYP. You lean toward…',
       options: [
         { text: 'A career in medicine, research, or engineering', scores: { Biology: 3, Chemistry: 2, Physics: 2 } },
-        { text: 'Law, business, or something people-focused', scores: { Economics: 2, 'Global Politics': 2, History: 1 } },
+        { text: 'Law, business, or something people-focused', scores: { 'Business Studies': 2, Economics: 2, History: 1 } },
         { text: 'A creative field — design, art, film, music', scores: { 'Visual Arts': 2, 'Digital Design': 2, Music: 1 } },
-        { text: 'Not sure yet, but something active or hands-on', scores: { 'Physical & Health Education': 2, 'Product Design': 1 } }
+        { text: 'Not sure yet, but something active or hands-on', scores: { 'Physical & Health Education': 2, 'Integrated Design': 1 } }
       ]
     }
   ];
+
+  const groupDefs = {
+    balanced: [
+      { key: 'sciences', label: 'Sciences', need: 2, options: ['Biology', 'Chemistry', 'Physics'] },
+      { key: 'humanities', label: 'Individuals & Societies', need: 2, options: ['History', 'Geography', 'Economics', 'Business Studies'] },
+      { key: 'artsPhe', label: 'Arts or PHE (pick 1)', need: 1, options: ['Visual Arts', 'Music', 'Drama', 'Physical & Health Education'] },
+      { key: 'designPhe', label: 'Design or PHE (pick 1)', need: 1, options: ['Digital Design', 'Integrated Design', 'Physical & Health Education'] }
+    ],
+    sciences: [
+      { key: 'sciences', label: 'Sciences (all three, locked in)', need: 3, options: ['Biology', 'Chemistry', 'Physics'], locked: true },
+      { key: 'humanities', label: 'Individuals & Societies', need: 2, options: ['History', 'Geography', 'Economics', 'Business Studies'] },
+      { key: 'artsDesign', label: 'Arts or Design (pick 1)', need: 1, options: ['Visual Arts', 'Music', 'Drama', 'Digital Design', 'Integrated Design'] }
+    ]
+  };
+
+  const pathwayNames = { balanced: 'Balanced', sciences: 'Sciences' };
 
   const sqSteps = {
     pathway: document.getElementById('sqStepPathway'),
@@ -538,18 +557,57 @@ document.addEventListener('DOMContentLoaded', () => {
     Object.entries(sqSteps).forEach(([key, el]) => el.classList.toggle('is-active', key === name));
   }
 
-  let sqPathway = null;
   let sqIndex = 0;
+  let sqAnswers = [];          // option index per question — lets Back undo an answer properly
   let sqScores = {};
+  let sqRecommended = 'balanced';
+  let sqViewing = 'balanced';  // pathway currently shown on the results screen
+  let sqPathway = 'balanced';  // pathway used in the builder
 
-  document.querySelectorAll('.pathway-card').forEach(card => {
-    card.addEventListener('click', () => {
-      sqPathway = card.dataset.pathway;
-      sqIndex = 0;
-      sqScores = {};
-      showSqStep('questions');
-      renderSqQuestion();
+  function computeScores() {
+    const scores = {};
+    Object.keys(subjectMeta).forEach(s => { scores[s] = 0; });
+    sqAnswers.forEach((optIdx, qIdx) => {
+      if (optIdx == null) return;
+      Object.entries(sqQuestions[qIdx].options[optIdx].scores).forEach(([subj, pts]) => {
+        scores[subj] += pts;
+      });
     });
+    return scores;
+  }
+
+  function recommendPathway(scores) {
+    const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
+    const sci = SCIENCES.reduce((a, s) => a + scores[s], 0);
+    const wantsScienceCareer = sqAnswers[3] === 0;
+    return (wantsScienceCareer || sci / total >= 0.4) ? 'sciences' : 'balanced';
+  }
+
+  // Picks the best-scoring subjects for each slot of a pathway.
+  function suggestMix(pathway, scores) {
+    const taken = new Set();
+    return groupDefs[pathway].map(def => {
+      let picks;
+      if (def.locked) {
+        picks = [...def.options];
+      } else {
+        picks = def.options
+          .filter(o => !taken.has(o))
+          .map((o, i) => ({ o, i, s: scores[o] || 0 }))
+          .sort((a, b) => b.s - a.s || a.i - b.i)
+          .slice(0, def.need)
+          .map(x => x.o);
+      }
+      picks.forEach(p => taken.add(p));
+      return { def, picks };
+    });
+  }
+
+  document.getElementById('sqStart').addEventListener('click', () => {
+    sqIndex = 0;
+    sqAnswers = [];
+    showSqStep('questions');
+    renderSqQuestion();
   });
 
   const sqQuestionEl = document.getElementById('sqQuestion');
@@ -561,14 +619,13 @@ document.addEventListener('DOMContentLoaded', () => {
     sqProgressEl.textContent = `Question ${sqIndex + 1} of ${sqQuestions.length}`;
     sqQuestionEl.innerHTML = `<h3>${item.q}</h3><div class="sq-question__options"></div>`;
     const optWrap = sqQuestionEl.querySelector('.sq-question__options');
-    item.options.forEach(opt => {
+    item.options.forEach((opt, optIdx) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.textContent = opt.text;
+      if (sqAnswers[sqIndex] === optIdx) b.classList.add('is-chosen');
       b.addEventListener('click', () => {
-        Object.entries(opt.scores).forEach(([subj, pts]) => {
-          sqScores[subj] = (sqScores[subj] || 0) + pts;
-        });
+        sqAnswers[sqIndex] = optIdx;
         sqIndex++;
         if (sqIndex >= sqQuestions.length) {
           renderSqResults();
@@ -589,11 +646,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Two-button switch used on the results screen and in the builder.
+  function renderPathwaySwitch(container, active, onPick) {
+    container.innerHTML = '';
+    ['balanced', 'sciences'].forEach(key => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('role', 'tab');
+      b.setAttribute('aria-selected', String(key === active));
+      b.className = 'pathway-switch__btn' + (key === active ? ' is-active' : '');
+      b.innerHTML = `${pathwayNames[key]}${key === sqRecommended ? ' <span class="pathway-switch__tag">Recommended</span>' : ''}`;
+      b.addEventListener('click', () => onPick(key));
+      container.appendChild(b);
+    });
+  }
+
   const sqResultsEl = document.getElementById('sqResults');
+  const sqVerdictEl = document.getElementById('sqVerdict');
+  const sqSwitchEl = document.getElementById('sqPathwaySwitch');
+  const sqSwitchHintEl = document.getElementById('sqSwitchHint');
+  const sqMixEl = document.getElementById('sqMix');
 
   function renderSqResults() {
     showSqStep('results');
-    const sorted = Object.entries(sqScores).sort((a, b) => b[1] - a[1]);
+    sqScores = computeScores();
+    sqRecommended = recommendPathway(sqScores);
+    sqViewing = sqRecommended;
+
+    sqVerdictEl.innerHTML = sqRecommended === 'sciences'
+      ? 'Your answers lean toward the <strong>Sciences pathway</strong> — experiments, how things work, and science-heavy futures kept coming up.'
+      : 'Your answers lean toward the <strong>Balanced pathway</strong> — you spread across different kinds of thinking, so keeping lots of doors open fits you.';
+
+    renderResultsForPathway();
+
+    // Overall ranking (top 7 with a score)
+    const sorted = Object.entries(sqScores).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
     sqResultsEl.innerHTML = '';
     sorted.slice(0, 7).forEach(([subj, score]) => {
       let badge = { label: 'Worth a look', cls: 'badge--worth' };
@@ -611,8 +698,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  function renderResultsForPathway() {
+    renderPathwaySwitch(sqSwitchEl, sqViewing, (key) => { sqViewing = key; renderResultsForPathway(); });
+    const other = sqViewing === 'sciences' ? 'balanced' : 'sciences';
+    sqSwitchHintEl.textContent = sqViewing === sqRecommended
+      ? `Curious about ${pathwayNames[other]}? Tap it above to see what your mix would look like there.`
+      : `You're looking at ${pathwayNames[sqViewing]}, the one the quiz didn't pick. It's still a real option — compare it with ${pathwayNames[other]}.`;
+
+    sqMixEl.innerHTML = '';
+    suggestMix(sqViewing, sqScores).forEach(({ def, picks }) => {
+      const card = document.createElement('div');
+      card.className = 'sq-mix__group';
+      card.innerHTML = `<p class="sq-mix__label">${def.label}</p>
+        <div class="sq-mix__picks">${picks.map(p => `<span class="sq-mix__pick">${p}</span>`).join('')}</div>`;
+      sqMixEl.appendChild(card);
+    });
+    document.getElementById('sqToBuilder').textContent = `Build my ${pathwayNames[sqViewing]} plan`;
+  }
+
   document.getElementById('sqRetake').addEventListener('click', () => {
-    sqPathway = null; sqIndex = 0; sqScores = {};
+    sqIndex = 0; sqAnswers = []; sqScores = {};
     showSqStep('pathway');
   });
 
@@ -622,34 +727,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const builderFill = document.getElementById('builderFill');
   const builderStatus = document.getElementById('builderStatus');
   const builderDownload = document.getElementById('builderDownload');
-
-  const groupDefs = {
-    balanced: [
-      { key: 'sciences', label: 'Sciences', need: 2, options: ['Biology', 'Chemistry', 'Physics'] },
-      { key: 'humanities', label: 'Individuals & Societies', need: 2, options: ['History', 'Geography', 'Economics', 'Global Politics'] },
-      { key: 'artsPhe', label: 'Arts or PHE (pick 1)', need: 1, options: ['Visual Arts', 'Music', 'Drama', 'Physical & Health Education'] },
-      { key: 'designPhe', label: 'Design or PHE (pick 1)', need: 1, options: ['Digital Design', 'Product Design', 'Physical & Health Education'] }
-    ],
-    sciences: [
-      { key: 'sciences', label: 'Sciences (all three, locked in)', need: 3, options: ['Biology', 'Chemistry', 'Physics'], locked: true },
-      { key: 'humanities', label: 'Individuals & Societies', need: 2, options: ['History', 'Geography', 'Economics', 'Global Politics'] },
-      { key: 'artsDesign', label: 'Arts or Design (pick 1)', need: 1, options: ['Visual Arts', 'Music', 'Drama', 'Digital Design', 'Product Design'] }
-    ]
-  };
+  const builderSwitchEl = document.getElementById('builderSwitch');
 
   document.getElementById('sqToBuilder').addEventListener('click', () => {
+    sqPathway = sqViewing;
     showSqStep('builder');
     buildBuilder();
   });
+  document.getElementById('builderBackResults').addEventListener('click', () => {
+    sqViewing = sqPathway;
+    showSqStep('results');
+    renderResultsForPathway();
+  });
 
   function buildBuilder() {
-    const defs = groupDefs[sqPathway] || groupDefs.balanced;
+    renderPathwaySwitch(builderSwitchEl, sqPathway, (key) => { sqPathway = key; buildBuilder(); });
+    const defs = groupDefs[sqPathway];
+    const suggested = suggestMix(sqPathway, sqScores);
     builderRulesEl.textContent = sqPathway === 'sciences'
-      ? 'Sciences pathway: all three sciences are locked in, plus two humanities and one arts/design subject.'
-      : 'Balanced pathway: pick two sciences, two humanities, one arts-or-PHE, and one design-or-PHE subject.';
+      ? 'Sciences pathway: all three sciences are locked in, plus two humanities and one arts/design subject. Your quiz picks are ticked — change anything you like.'
+      : 'Balanced pathway: pick two sciences, two humanities, one arts-or-PHE, and one design-or-PHE subject. Your quiz picks are ticked — change anything you like.';
 
     builderGroupsEl.innerHTML = '';
-    defs.forEach(def => {
+    defs.forEach((def, gi) => {
       const group = document.createElement('div');
       group.className = 'builder-group';
       group.dataset.key = def.key;
@@ -661,29 +761,36 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="builder-options"></div>`;
       const optWrap = group.querySelector('.builder-options');
+      const picks = suggested[gi].picks;
       def.options.forEach(opt => {
-        const id = `opt-${def.key}-${opt.replace(/\s+/g, '')}`;
+        const id = `opt-${def.key}-${opt.replace(/[^a-z]/gi, '')}`;
         const label = document.createElement('label');
-        label.innerHTML = `<input type="checkbox" id="${id}" value="${opt}" ${def.locked ? 'checked disabled' : ''}> ${opt}`;
+        const checked = def.locked || picks.includes(opt);
+        label.innerHTML = `<input type="checkbox" id="${id}" value="${opt}" ${checked ? 'checked' : ''} ${def.locked ? 'disabled' : ''}> ${opt}`;
         optWrap.appendChild(label);
-        const input = label.querySelector('input');
-        if (!def.locked) {
-          input.addEventListener('change', () => handleBuilderChange(group, def));
-        }
+        if (!def.locked) label.querySelector('input').addEventListener('change', refreshBuilder);
       });
       builderGroupsEl.appendChild(group);
-      if (def.locked) group.classList.add('is-complete');
     });
-    updateBuilderProgress();
+    refreshBuilder();
   }
 
-  function handleBuilderChange(group, def) {
-    const checkedCount = group.querySelectorAll('input:checked').length;
-    group.classList.toggle('is-complete', checkedCount === def.need);
-    // Re-evaluate every input in the group (not just currently-enabled ones),
-    // so unchecking a box properly re-enables the others once you're back under the limit.
-    group.querySelectorAll('input').forEach(inp => {
-      if (!inp.checked) inp.disabled = checkedCount >= def.need;
+  // Enforces each group's limit, and stops one subject (like PHE) being picked in two groups.
+  function refreshBuilder() {
+    const defs = groupDefs[sqPathway];
+    const groups = [...builderGroupsEl.querySelectorAll('.builder-group')];
+    const chosenEverywhere = new Set(
+      [...builderGroupsEl.querySelectorAll('input:checked')].map(i => i.value)
+    );
+    groups.forEach((group, gi) => {
+      const def = defs[gi];
+      if (def.locked) { group.classList.add('is-complete'); return; }
+      const checkedCount = group.querySelectorAll('input:checked').length;
+      group.classList.toggle('is-complete', checkedCount === def.need);
+      group.querySelectorAll('input').forEach(inp => {
+        if (inp.checked) { inp.disabled = false; return; }
+        inp.disabled = checkedCount >= def.need || chosenEverywhere.has(inp.value);
+      });
     });
     updateBuilderProgress();
   }
@@ -697,8 +804,12 @@ document.addEventListener('DOMContentLoaded', () => {
     builderDownload.disabled = complete !== groups.length;
   }
 
+  function getBuilderSubjects() {
+    return [...builderGroupsEl.querySelectorAll('input:checked')].map(i => i.value);
+  }
+
   builderDownload.addEventListener('click', () => {
-    const lines = [`My MYP 4-5 Subject Plan`, `Pathway: ${sqPathway === 'sciences' ? 'Sciences' : 'Balanced'}`, ''];
+    const lines = [`My MYP 4-5 Subject Plan`, `Pathway: ${pathwayNames[sqPathway]}${sqPathway === sqRecommended ? ' (recommended by the quiz)' : ''}`, ''];
     builderGroupsEl.querySelectorAll('.builder-group').forEach(group => {
       const label = group.querySelector('h4').textContent;
       const chosen = [...group.querySelectorAll('input:checked')].map(i => i.value);
@@ -951,6 +1062,490 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   chatbotForm.addEventListener('submit', handleChatSubmit);
+
+
+  /* ===========================================================
+     PERSONAL STUDY PLANNER
+     Inputs: subjects, assessments, struggle topics, time.
+     Output: one sticky note per day with 25-minute study tasks.
+     Saved in this browser with localStorage.
+     =========================================================== */
+  const PL_KEY = 'ibcompass-planner-v1';
+  const BLOCK_MIN = 30;   // 25 minutes of study + 5 minute break
+  const MAX_DAYS = 28;
+
+  const plState = loadPlanner() || {
+    subjects: [], assessments: [], struggles: [],
+    weekday: 60, weekend: 90, plan: null, scratch: ''
+  };
+
+  function loadPlanner() {
+    try { return JSON.parse(localStorage.getItem(PL_KEY)); } catch (e) { return null; }
+  }
+  function savePlanner() {
+    try { localStorage.setItem(PL_KEY, JSON.stringify(plState)); } catch (e) { /* storage full or blocked — plan still works this session */ }
+  }
+
+  const plEls = {
+    subjectInput: document.getElementById('plSubjectInput'),
+    subjects: document.getElementById('plSubjects'),
+    suggestions: document.getElementById('plSubjectSuggestions'),
+    assessSubject: document.getElementById('plAssessSubject'),
+    assessTitle: document.getElementById('plAssessTitle'),
+    assessDate: document.getElementById('plAssessDate'),
+    assessList: document.getElementById('plAssessList'),
+    struggleSubject: document.getElementById('plStruggleSubject'),
+    struggleTopic: document.getElementById('plStruggleTopic'),
+    struggleList: document.getElementById('plStruggleList'),
+    weekday: document.getElementById('plWeekday'),
+    weekend: document.getElementById('plWeekend'),
+    weekdayOut: document.getElementById('plWeekdayOut'),
+    weekendOut: document.getElementById('plWeekendOut'),
+    error: document.getElementById('plError'),
+    board: document.getElementById('plBoard'),
+    upcoming: document.getElementById('plUpcoming'),
+    scratch: document.getElementById('plScratch')
+  };
+
+  const escapeHtml = (str) => String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const uid = () => Math.random().toString(36).slice(2, 9);
+
+  // Dates as local YYYY-MM-DD strings, so time zones never shift a day.
+  function toISO(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  }
+  function fromISO(iso) { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d); }
+  function todayDate() { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); }
+  function dayDiff(a, b) { return Math.round((b - a) / 86400000); }
+  function niceDate(iso) { return fromISO(iso).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }); }
+
+  // Autocomplete from the MYP subjects used elsewhere on the site
+  ['Language & Literature', 'Language Acquisition', 'Mathematics', ...Object.keys(subjectMeta)].forEach(s => {
+    const o = document.createElement('option'); o.value = s; plEls.suggestions.appendChild(o);
+  });
+
+  function addSubject(name) {
+    const clean = name.trim();
+    if (!clean) return;
+    if (plState.subjects.some(s => s.toLowerCase() === clean.toLowerCase())) return;
+    plState.subjects.push(clean);
+  }
+
+  function renderPlannerInputs() {
+    // subject chips
+    plEls.subjects.innerHTML = '';
+    plState.subjects.forEach(s => {
+      const chip = document.createElement('span');
+      chip.className = 'pl-chip';
+      chip.innerHTML = `${escapeHtml(s)} <button type="button" aria-label="Remove ${escapeHtml(s)}">×</button>`;
+      chip.querySelector('button').addEventListener('click', () => {
+        plState.subjects = plState.subjects.filter(x => x !== s);
+        plState.assessments = plState.assessments.filter(a => a.subject !== s);
+        plState.struggles = plState.struggles.filter(t => t.subject !== s);
+        savePlanner(); renderPlannerInputs();
+      });
+      plEls.subjects.appendChild(chip);
+    });
+
+    // subject dropdowns
+    [plEls.assessSubject, plEls.struggleSubject].forEach(sel => {
+      const prev = sel.value;
+      sel.innerHTML = plState.subjects.length
+        ? plState.subjects.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('')
+        : '<option value="">Add a subject first</option>';
+      if (plState.subjects.includes(prev)) sel.value = prev;
+    });
+
+    // assessments
+    plEls.assessList.innerHTML = '';
+    [...plState.assessments].sort((a, b) => a.date.localeCompare(b.date)).forEach(a => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span><strong>${escapeHtml(a.subject)}</strong> — ${escapeHtml(a.title)} <em>${niceDate(a.date)}</em></span>
+        <button type="button" aria-label="Remove assessment">×</button>`;
+      li.querySelector('button').addEventListener('click', () => {
+        plState.assessments = plState.assessments.filter(x => x.id !== a.id);
+        savePlanner(); renderPlannerInputs();
+      });
+      plEls.assessList.appendChild(li);
+    });
+
+    // struggles
+    plEls.struggleList.innerHTML = '';
+    plState.struggles.forEach(t => {
+      const li = document.createElement('li');
+      li.innerHTML = `<span><strong>${escapeHtml(t.subject)}</strong> — ${escapeHtml(t.topic)}</span>
+        <button type="button" aria-label="Remove topic">×</button>`;
+      li.querySelector('button').addEventListener('click', () => {
+        plState.struggles = plState.struggles.filter(x => x.id !== t.id);
+        savePlanner(); renderPlannerInputs();
+      });
+      plEls.struggleList.appendChild(li);
+    });
+
+    plEls.weekday.value = plState.weekday;
+    plEls.weekend.value = plState.weekend;
+    plEls.weekdayOut.textContent = `${plState.weekday} min`;
+    plEls.weekendOut.textContent = `${plState.weekend} min`;
+  }
+
+  document.getElementById('plSubjectAdd').addEventListener('click', () => {
+    addSubject(plEls.subjectInput.value);
+    plEls.subjectInput.value = '';
+    savePlanner(); renderPlannerInputs();
+    plEls.subjectInput.focus();
+  });
+  plEls.subjectInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('plSubjectAdd').click(); }
+  });
+  document.getElementById('plAddCore').addEventListener('click', () => {
+    ['Mathematics', 'Language & Literature', 'Language Acquisition'].forEach(addSubject);
+    savePlanner(); renderPlannerInputs();
+  });
+
+  plEls.assessDate.min = toISO(todayDate());
+  document.getElementById('plAssessAdd').addEventListener('click', () => {
+    const subject = plEls.assessSubject.value;
+    const title = plEls.assessTitle.value.trim();
+    const date = plEls.assessDate.value;
+    if (!subject) { plEls.error.textContent = 'Add a subject in step 1 before adding assessments.'; return; }
+    if (!title || !date) { plEls.error.textContent = 'Give the assessment a name and a date.'; return; }
+    if (fromISO(date) < todayDate()) { plEls.error.textContent = 'That date has already passed. Pick today or later.'; return; }
+    plEls.error.textContent = '';
+    plState.assessments.push({ id: uid(), subject, title, date });
+    plEls.assessTitle.value = ''; plEls.assessDate.value = '';
+    savePlanner(); renderPlannerInputs();
+  });
+
+  document.getElementById('plStruggleAdd').addEventListener('click', () => {
+    const subject = plEls.struggleSubject.value;
+    const topic = plEls.struggleTopic.value.trim();
+    if (!subject) { plEls.error.textContent = 'Add a subject in step 1 before adding topics.'; return; }
+    if (!topic) { plEls.error.textContent = 'Type the topic you find tricky.'; return; }
+    plEls.error.textContent = '';
+    plState.struggles.push({ id: uid(), subject, topic });
+    plEls.struggleTopic.value = '';
+    savePlanner(); renderPlannerInputs();
+  });
+  plEls.struggleTopic.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('plStruggleAdd').click(); }
+  });
+
+  plEls.weekday.addEventListener('input', () => { plState.weekday = +plEls.weekday.value; plEls.weekdayOut.textContent = `${plState.weekday} min`; savePlanner(); });
+  plEls.weekend.addEventListener('input', () => { plState.weekend = +plEls.weekend.value; plEls.weekendOut.textContent = `${plState.weekend} min`; savePlanner(); });
+
+  plEls.scratch.value = plState.scratch || '';
+  plEls.scratch.addEventListener('input', () => { plState.scratch = plEls.scratch.value; savePlanner(); });
+
+  /* ---- plan generation ---- */
+  function taskForAssessment(a, daysLeft, counters, firstToday) {
+    const topics = plState.struggles.filter(t => t.subject === a.subject);
+    const n = counters[a.id] = (counters[a.id] || 0) + 1;
+    if (daysLeft === 1) return firstToday
+      ? `Final check for ${a.title}: reread the task sheet, tick off each criterion, and pack what you need.`
+      : `${a.title}: one last timed practice question, then an early night.`;
+    if (daysLeft <= 3) return n % 2
+      ? `${a.title}: do one timed practice question, then mark it against the criteria.`
+      : `${a.title}: go through your summary sheet and cover up the answers to test yourself.`;
+    if (topics.length && n % 3 !== 0) {
+      const t = topics[(n - 1) % topics.length].topic;
+      return n % 2
+        ? `${t}: turn your notes into 5 questions, then answer them from memory.`
+        : `${t}: find one worked example and redo it without looking.`;
+    }
+    const general = [
+      `${a.title}: make a one-page summary of the key ideas.`,
+      `${a.title}: write down what each criterion is asking for, in your own words.`,
+      `${a.title}: explain the main idea out loud in two minutes, like you're teaching it.`
+    ];
+    return general[(n - 1) % general.length];
+  }
+
+  function taskForReview(subject, counters) {
+    const topics = plState.struggles.filter(t => t.subject === subject);
+    const n = counters[subject] = (counters[subject] || 0) + 1;
+    if (topics.length) return `Keep ${topics[(n - 1) % topics.length].topic} fresh: make 10 flashcards and test yourself.`;
+    return n % 2
+      ? `Tidy up this week's ${subject} notes and circle anything that still feels unclear.`
+      : `Skim your latest ${subject} lesson and write three things you remember without looking.`;
+  }
+
+  function generatePlan() {
+    const today = todayDate();
+    const upcoming = plState.assessments
+      .filter(a => fromISO(a.date) >= today)
+      .sort((a, b) => a.date.localeCompare(b.date));
+    const lastDay = upcoming.length ? dayDiff(today, fromISO(upcoming[upcoming.length - 1].date)) : 6;
+    const horizon = Math.min(Math.max(lastDay, 6), MAX_DAYS - 1);
+
+    const usage = {};
+    const counters = {};
+    const days = [];
+
+    for (let d = 0; d <= horizon; d++) {
+      const date = new Date(today); date.setDate(today.getDate() + d);
+      const iso = toISO(date);
+      const weekend = date.getDay() === 0 || date.getDay() === 6;
+      const minutes = weekend ? plState.weekend : plState.weekday;
+      const tasks = [];
+      const dueToday = upcoming.filter(a => a.date === iso);
+
+      dueToday.forEach(a => tasks.push({
+        id: uid(), subject: a.subject, mins: 10, due: true, done: false,
+        text: `${a.title} is today. Quick look over your summary, then trust your prep.`
+      }));
+
+      let blocks = Math.floor(minutes / BLOCK_MIN);
+      if (blocks === 0 && minutes >= 15) blocks = 1;
+      const usedToday = new Set(dueToday.map(a => a.subject));
+      const countToday = {};   // max 2 blocks per assessment/subject per day
+
+      for (let b = 0; b < blocks; b++) {
+        const candidates = [];
+        upcoming.forEach(a => {
+          const left = dayDiff(date, fromISO(a.date));
+          if (left < 1) return;
+          const topics = plState.struggles.filter(t => t.subject === a.subject).length;
+          let w = (1 + 0.5 * topics) * (left <= 3 ? 3 : 1) / left;
+          if ((countToday[a.id] || 0) >= 2) return;
+          if (usedToday.has(a.subject)) w *= 0.3;
+          w /= 1 + (usage[a.id] || 0) * 0.35;
+          candidates.push({ w, kind: 'assess', a, left });
+        });
+        plState.subjects.forEach(s => {
+          if (upcoming.some(a => a.subject === s && dayDiff(date, fromISO(a.date)) >= 1)) return;
+          if ((countToday[s] || 0) >= 2) return;
+          let w = 0.12 + 0.05 * plState.struggles.filter(t => t.subject === s).length;
+          if (usedToday.has(s)) w *= 0.3;
+          w /= 1 + (usage[s] || 0) * 0.5;
+          candidates.push({ w, kind: 'review', s });
+        });
+        if (!candidates.length) break;
+        candidates.sort((x, y) => y.w - x.w);
+        const pick = candidates[0];
+        if (pick.kind === 'assess') {
+          const firstToday = !countToday[pick.a.id];
+          usage[pick.a.id] = (usage[pick.a.id] || 0) + 1;
+          countToday[pick.a.id] = (countToday[pick.a.id] || 0) + 1;
+          usedToday.add(pick.a.subject);
+          tasks.push({ id: uid(), subject: pick.a.subject, mins: 25, done: false, text: taskForAssessment(pick.a, pick.left, counters, firstToday) });
+        } else {
+          usage[pick.s] = (usage[pick.s] || 0) + 1;
+          countToday[pick.s] = (countToday[pick.s] || 0) + 1;
+          usedToday.add(pick.s);
+          tasks.push({ id: uid(), subject: pick.s, mins: 25, done: false, text: taskForReview(pick.s, counters) });
+        }
+      }
+      days.push({ date: iso, minutes, tasks });
+    }
+    return days;
+  }
+
+  const NOTE_COLORS = ['#FFE66D', '#FFB3D1', '#B8F2D8', '#BFE3FF', '#FFD0A8', '#DCCBFF'];
+  const subjectColor = (s) => NOTE_COLORS[Math.max(0, plState.subjects.indexOf(s)) % NOTE_COLORS.length];
+
+  function renderUpcoming() {
+    const today = todayDate();
+    const list = plState.assessments.filter(a => fromISO(a.date) >= today).sort((a, b) => a.date.localeCompare(b.date));
+    if (!list.length || !plState.plan) { plEls.upcoming.innerHTML = ''; return; }
+    plEls.upcoming.innerHTML = '<p class="pl-upcoming__title">Coming up</p>' + list.map(a => {
+      const left = dayDiff(today, fromISO(a.date));
+      const when = left === 0 ? 'today' : left === 1 ? 'tomorrow' : `in ${left} days`;
+      return `<span class="pl-upcoming__item" style="--note:${subjectColor(a.subject)}"><strong>${escapeHtml(a.subject)}</strong> ${escapeHtml(a.title)} · ${when}</span>`;
+    }).join('');
+  }
+
+  function renderBoard() {
+    renderUpcoming();
+    if (!plState.plan) return;
+    const todayIso = toISO(todayDate());
+    // Drop days that are already in the past
+    const days = plState.plan.filter(d => d.date >= todayIso);
+    plEls.board.innerHTML = '';
+    if (!days.length) {
+      plEls.board.innerHTML = '<div class="pl-empty"><p class="pl-empty__title">This plan has run out of days.</p><p>Add your next assessments and tap Make my plan again.</p></div>';
+      return;
+    }
+    days.forEach((day, i) => {
+      const note = document.createElement('article');
+      const hasDue = day.tasks.some(t => t.due);
+      const rel = day.date === todayIso ? 'Today' : (i === 1 && days[0].date === todayIso ? 'Tomorrow' : '');
+      note.className = 'pl-note' + (hasDue ? ' pl-note--due' : '');
+      note.style.setProperty('--tilt', `${((i * 37) % 5) - 2}deg`);
+      note.style.setProperty('--note', NOTE_COLORS[i % NOTE_COLORS.length]);
+      const doneCount = day.tasks.filter(t => t.done).length;
+      note.innerHTML = `
+        <header class="pl-note__head">
+          <h4>${niceDate(day.date)}</h4>
+          ${rel ? `<span class="pl-note__rel">${rel}</span>` : ''}
+        </header>
+        ${day.tasks.length ? `<ul class="pl-note__tasks"></ul>
+          <p class="pl-note__foot">${doneCount} of ${day.tasks.length} done</p>`
+          : `<p class="pl-note__rest">${day.minutes ? 'Nothing due. Light review only if you feel like it.' : 'Rest day. No study planned.'}</p>`}`;
+      const ul = note.querySelector('.pl-note__tasks');
+      day.tasks.forEach(t => {
+        const li = document.createElement('li');
+        li.className = t.done ? 'is-done' : '';
+        const id = `pltask-${t.id}`;
+        li.innerHTML = `<input type="checkbox" id="${id}" ${t.done ? 'checked' : ''}>
+          <label for="${id}"><span class="pl-note__subj">${escapeHtml(t.subject)} · ${t.mins} min</span>${escapeHtml(t.text)}</label>`;
+        li.querySelector('input').addEventListener('change', (e) => {
+          t.done = e.target.checked;
+          li.classList.toggle('is-done', t.done);
+          note.querySelector('.pl-note__foot').textContent = `${day.tasks.filter(x => x.done).length} of ${day.tasks.length} done`;
+          savePlanner();
+        });
+        ul && ul.appendChild(li);
+      });
+      plEls.board.appendChild(note);
+    });
+  }
+
+  document.getElementById('plGenerate').addEventListener('click', () => {
+    if (!plState.subjects.length) { plEls.error.textContent = 'Add at least one subject in step 1.'; return; }
+    if (!plState.weekday && !plState.weekend) { plEls.error.textContent = 'Set some study time in step 4 — even 15 minutes counts.'; return; }
+    plEls.error.textContent = '';
+    plState.plan = generatePlan();
+    savePlanner();
+    renderBoard();
+    plEls.board.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  document.getElementById('plClear').addEventListener('click', () => {
+    if (!confirm('Clear your subjects, assessments, topics and plan?')) return;
+    Object.assign(plState, { subjects: [], assessments: [], struggles: [], weekday: 60, weekend: 90, plan: null, scratch: '' });
+    plEls.scratch.value = '';
+    savePlanner();
+    renderPlannerInputs();
+    plEls.upcoming.innerHTML = '';
+    plEls.board.innerHTML = `<div class="pl-empty"><p class="pl-empty__title">Your plan shows up here as sticky notes, one for each day.</p>
+      <p>Add your subjects and at least one assessment, set your time, then tap Make my plan.</p></div>`;
+  });
+
+  renderPlannerInputs();
+  renderBoard();
+
+  /* ===========================================================
+     SMILEY SPRINT — quick quiz that fills a smiley jar
+     =========================================================== */
+  const sprintPool = [
+    { q: 'How are you graded on most MYP tasks?', options: ['One overall percentage', 'Criteria A, B, C and D', 'Only a final exam'], answer: 1 },
+    { q: 'What does ATL stand for?', options: ['Approaches to Learning', 'Advanced Test Levels', 'All Topics Listed'], answer: 0 },
+    { q: 'How many MYP subject groups are there?', options: ['Six', 'Eight', 'Ten'], answer: 1 },
+    { q: 'When do you complete the Personal Project?', options: ['MYP 1', 'MYP 3', 'The final MYP year'], answer: 2 },
+    { q: 'What is a Statement of Inquiry?', options: ['The big idea a unit explores', 'A letter to your parents', 'Your end-of-year report'], answer: 0 },
+    { q: 'Which two pathways can you pick for MYP 4–5?', options: ['Arts or Sport', 'Balanced or Sciences', 'Easy or Hard'], answer: 1 },
+    { q: 'In the Sciences pathway, how many sciences do you take?', options: ['One', 'Two', 'All three'], answer: 2 },
+    { q: 'Which humanities subject is on offer here?', options: ['Business Studies', 'Astrology', 'Cooking'], answer: 0 },
+    { q: 'Service as Action is about…', options: ['Helping your community', 'Serving lunch in the canteen', 'Extra homework'], answer: 0 },
+    { q: 'Best first move when a long task is set?', options: ['Wait until the week before', 'Split it into smaller deadlines', 'Ask a friend to do it'], answer: 1 },
+    { q: 'A good length for one focused study block?', options: ['About 25 minutes', 'Three hours straight', 'Two minutes'], answer: 0 },
+    { q: 'Which design subject is in the builder?', options: ['Integrated Design', 'Fashion Design', 'Garden Design'], answer: 0 },
+    { q: 'Which subjects do you keep no matter the pathway?', options: ['Drama and Music', 'Language & Literature, Language Acquisition, Maths', 'Only PE'], answer: 1 },
+    { q: 'Rereading notes vs. quizzing yourself — which sticks better?', options: ['Rereading', 'Quizzing yourself', 'They are exactly the same'], answer: 1 },
+    { q: 'Your pathway choice at 14 is…', options: ['Locked forever', 'A direction, and most options stay open', 'Chosen for you'], answer: 1 }
+  ];
+  const SPRINT_LEN = 10;
+  const SPRINT_KEY = 'ibcompass-sprint-best';
+
+  const sprintEls = {
+    face: document.getElementById('sprintFace'),
+    score: document.getElementById('sprintScore'),
+    streak: document.getElementById('sprintStreak'),
+    best: document.getElementById('sprintBest'),
+    jar: document.getElementById('sprintJar'),
+    count: document.getElementById('sprintCount'),
+    area: document.getElementById('sprintArea')
+  };
+  let sprintQs = [], sprintI = 0, sprintScore = 0, sprintStreak = 0;
+  let sprintBest = 0;
+  try { sprintBest = +localStorage.getItem(SPRINT_KEY) || 0; } catch (e) { sprintBest = 0; }
+  sprintEls.best.textContent = sprintBest;
+
+  function dropInJar(emoji, bonus) {
+    const s = document.createElement('span');
+    s.className = 'sprint__token' + (bonus ? ' sprint__token--bonus' : '');
+    s.textContent = emoji;
+    sprintEls.jar.appendChild(s);
+  }
+
+  function setFace(emoji) {
+    sprintEls.face.textContent = emoji;
+    sprintEls.face.classList.remove('is-bouncing');
+    void sprintEls.face.offsetWidth; // restart the bounce
+    sprintEls.face.classList.add('is-bouncing');
+  }
+
+  function startSprint() {
+    sprintQs = [...sprintPool].sort(() => Math.random() - 0.5).slice(0, SPRINT_LEN);
+    sprintI = 0; sprintScore = 0; sprintStreak = 0;
+    sprintEls.jar.innerHTML = '';
+    sprintEls.score.textContent = '0';
+    sprintEls.streak.textContent = '0';
+    setFace('🙂');
+    renderSprintQ();
+  }
+
+  function renderSprintQ() {
+    if (sprintI >= sprintQs.length) return endSprint();
+    const item = sprintQs[sprintI];
+    sprintEls.count.textContent = `Question ${sprintI + 1} of ${sprintQs.length}`;
+    sprintEls.area.innerHTML = `<p class="sprint__q">${item.q}</p><div class="sprint__opts"></div><p class="sprint__feedback" aria-live="polite"></p>`;
+    const opts = sprintEls.area.querySelector('.sprint__opts');
+    const fb = sprintEls.area.querySelector('.sprint__feedback');
+    item.options.forEach((text, idx) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'sprint__opt';
+      b.textContent = text;
+      b.addEventListener('click', () => {
+        [...opts.children].forEach(c => c.disabled = true);
+        opts.children[item.answer].classList.add('is-correct');
+        if (idx === item.answer) {
+          sprintScore++; sprintStreak++;
+          dropInJar('😊');
+          let msg = 'Nice! A smiley for the jar.';
+          if (sprintStreak % 3 === 0) { sprintScore++; dropInJar('🌟', true); msg = `Three in a row — bonus star!`; setFace('🤩'); }
+          else setFace('😄');
+          fb.textContent = msg;
+        } else {
+          sprintStreak = 0;
+          b.classList.add('is-wrong');
+          setFace('😅');
+          fb.textContent = `Not quite — it's "${item.options[item.answer]}".`;
+        }
+        sprintEls.score.textContent = sprintScore;
+        sprintEls.streak.textContent = sprintStreak;
+        const next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'btn btn--primary sprint__next';
+        next.textContent = sprintI === sprintQs.length - 1 ? 'See my jar' : 'Next question';
+        next.addEventListener('click', () => { sprintI++; renderSprintQ(); });
+        sprintEls.area.appendChild(next);
+        next.focus();
+      });
+      opts.appendChild(b);
+    });
+  }
+
+  function endSprint() {
+    const newBest = sprintScore > sprintBest;
+    if (newBest) {
+      sprintBest = sprintScore;
+      sprintEls.best.textContent = sprintBest;
+      try { localStorage.setItem(SPRINT_KEY, String(sprintBest)); } catch (e) { /* ignore */ }
+    }
+    setFace(sprintScore >= 10 ? '🥳' : sprintScore >= 6 ? '😄' : '🙂');
+    sprintEls.count.textContent = 'Round done';
+    const line = sprintScore >= 10 ? 'Jar overflowing. You know your MYP.'
+      : sprintScore >= 6 ? 'Solid jar. A couple more and you\'re a pro.'
+      : 'Every smiley counts. Go again and beat it.';
+    sprintEls.area.innerHTML = `<p class="sprint__q">You collected ${sprintScore} smiley${sprintScore === 1 ? '' : 's'}${newBest ? ' — a new best!' : '.'}</p>
+      <p class="sprint__feedback">${line}</p>
+      <button type="button" class="btn btn--primary" id="sprintAgain">Play again</button>`;
+    document.getElementById('sprintAgain').addEventListener('click', startSprint);
+  }
+
+  startSprint();
 
 });
 
