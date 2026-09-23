@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ascension Archive — Your MYP Survival Guide</title>
+<title>Ascension Archive — IB Compass</title>
 <meta name="description" content="A student's guide to surviving and thriving through the IB Middle Years Programme.">
 
-<!-- Google Fonts: Fraunces for headings, Inter for body -->
+<!-- Google Fonts: Bricolage Grotesque for headings, Nunito for body -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -18,11 +18,13 @@
 <!-- ============ NAVBAR ============ -->
 <header class="navbar" id="navbar">
   <div class="navbar__inner">
-    <a href="#home" class="navbar__brand">Ascension&nbsp;Archive</a>
+    <a href="#home" class="navbar__brand">Ascension&nbsp;Archive <span class="navbar__compass">IB Compass</span></a>
     <nav class="navbar__links">
       <a href="#home" data-nav>Home</a>
       <a href="#transitions" data-nav>Classes &amp; Tracks</a>
       <a href="#subject-quiz" data-nav>Subject Quiz</a>
+      <a href="#planner" data-nav>Study Planner</a>
+      <a href="#play" data-nav>Smiley Sprint</a>
       <a href="#footer" data-nav>Help</a>
     </nav>
     <button class="navbar__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
@@ -33,6 +35,8 @@
     <a href="#home" data-nav>Home</a>
     <a href="#transitions" data-nav>Classes &amp; Tracks</a>
     <a href="#subject-quiz" data-nav>Subject Quiz</a>
+    <a href="#planner" data-nav>Study Planner</a>
+    <a href="#play" data-nav>Smiley Sprint</a>
     <a href="#footer" data-nav>Help</a>
   </nav>
 </header>
@@ -50,22 +54,22 @@
     <p class="hero__sub">Big changes are coming — new teachers, new subjects, real choices. This guide shows you what's ahead, what stays the same, and exactly what to do first. Tap a phase to begin.</p>
 
     <div class="phase-cards" id="phaseCards">
-      <button class="phase-card" data-target="leap" style="--grad-a:#0055FF; --grad-b:#00D1FF;">
-        <span class="phase-card__art" aria-hidden="true"></span>
+      <button class="phase-card" data-target="leap" style="--card-bg:#DFF0FF; --card-accent:#1F8FFF;">
+        <span class="phase-card__art" aria-hidden="true">🚀</span>
         <span class="phase-card__label">The Leap</span>
         <span class="phase-card__tag">MYP 1</span>
         <span class="phase-card__blurb">New school, new subjects, way more teachers. Here's how to handle the jump — and actually enjoy it.</span>
       </button>
 
-      <button class="phase-card" data-target="bridge" style="--grad-a:#00D1FF; --grad-b:#0055FF;">
-        <span class="phase-card__art" aria-hidden="true"></span>
+      <button class="phase-card" data-target="bridge" style="--card-bg:#D8F7EA; --card-accent:#12A97B;">
+        <span class="phase-card__art" aria-hidden="true">🌉</span>
         <span class="phase-card__label">The Bridge</span>
         <span class="phase-card__tag">MYP 2 → 3</span>
         <span class="phase-card__blurb">Year 3 is where school gets real — bigger tasks, more independence, and your first look at the choices ahead.</span>
       </button>
 
-      <button class="phase-card" data-target="choice" style="--grad-a:#0033AA; --grad-b:#00D1FF;">
-        <span class="phase-card__art" aria-hidden="true"></span>
+      <button class="phase-card" data-target="choice" style="--card-bg:#FFE1EE; --card-accent:#E83E86;">
+        <span class="phase-card__art" aria-hidden="true">🧭</span>
         <span class="phase-card__label">The Choice</span>
         <span class="phase-card__tag">MYP 3 → 4</span>
         <span class="phase-card__blurb">Time to pick your subjects! Learn how it works, which doors stay open, and how to choose without stressing.</span>
@@ -104,7 +108,7 @@
       <div class="panel-grid">
         <div class="panel-art panel-art--leap" aria-hidden="true"></div>
         <div class="panel-copy">
-          <p>You're walking into a bigger building with a bigger timetable. Instead of one classroom and one teacher, you'll move between rooms and meet six, seven, maybe eight different teachers — one for each subject group. It's a lot at first. By week three, it'll just feel like Tuesday.</p>
+          <p>Change hits weirdly. One day your schedule is simple, the next it's stacked and moving faster than you expect. You're suddenly dealing with more subjects, more switches, more things happening at once. It's not deep or emotional, it's just different. The pace shifts, the expectations shift, and you end up adjusting because there's no real alternative. You follow what's in front of you, you move to the next thing.</p>
           <blockquote class="pull-quote">"You don't need to have it figured out on day one. You just need a planner and a decent night's sleep."</blockquote>
         </div>
       </div>
@@ -167,7 +171,7 @@
       <div class="panel-grid">
         <div class="panel-art panel-art--bridge" aria-hidden="true"></div>
         <div class="panel-copy">
-          <p>MYP 3 is the year the training wheels come off. Tasks get longer, teachers expect you to plan your own time, and — quietly, in the background — the subject choices ahead of you start taking shape. Nothing to panic about. Just something to notice.</p>
+          <p>MYP 3 is the year things stop being handed to you in small pieces. The tasks stretch out, the deadlines spread wider, and teachers expect you to manage your own time instead of waiting for reminders. At some point, the choices you'll make later start forming gradually. This is not really a warning or something too big, it's simply the point where school shifts from following instructions to figuring out how you work.</p>
           <blockquote class="pull-quote">"Bigger tasks aren't a punishment. They're practice for choosing your own path."</blockquote>
         </div>
       </div>
@@ -232,8 +236,8 @@
       <div class="panel-grid">
         <div class="panel-art panel-art--choice" aria-hidden="true"></div>
         <div class="panel-copy">
-          <p>Welcome to the big one. At the end of MYP 3, you'll choose a subject pathway for MYP 4–5: Balanced or Sciences. It's not a life sentence — it's a direction. Most doors stay open either way, as long as you know which ones you're walking through.</p>
-          <blockquote class="pull-quote">"Pick the pathway that fits how you like to think, not the one you think sounds impressive."</blockquote>
+          <p>Welcome to the big one. At the end of MYP 3, you'll choose a subject pathway for MYP 4–5: Balanced or Sciences. It's not something you have to stick with forever. Most options stay open no matter which one you pick, unless you drop a subject from MYP 4, as long as you understand what each pathway leads toward. This isn't about predicting your future at 14–15, it's about choosing the kind of thinking you want to work with for the next two years.</p>
+          <blockquote class="pull-quote">"Pick the pathway that matches how your brain likes to operate, not the one that sounds impressive when you say it out loud."</blockquote>
         </div>
       </div>
 
@@ -294,20 +298,22 @@
     <p class="eyebrow">MYP 4–5 subject selection</p>
     <h2 class="section__title">Two pathways, four questions — find the subject mix that fits you.</h2>
 
-    <!-- STEP 1: pathway choice -->
+    <!-- STEP 1: intro to both pathways -->
     <div class="sq-step is-active" id="sqStepPathway">
       <div class="pathway-grid">
-        <button class="pathway-card" data-pathway="balanced">
+        <div class="pathway-card pathway-card--balanced">
           <h3>Balanced</h3>
           <p>Two sciences, two humanities, one arts/PHE, one design/PHE.</p>
           <span class="pathway-card__tag">Most doors open</span>
-        </button>
-        <button class="pathway-card" data-pathway="sciences">
+        </div>
+        <div class="pathway-card pathway-card--sciences">
           <h3>Sciences</h3>
           <p>All three sciences, two humanities, one arts/design.</p>
           <span class="pathway-card__tag">For medicine, engineering, or pure science</span>
-        </button>
+        </div>
       </div>
+      <p class="sq-intro">Answer four quick questions and we'll suggest a pathway and a subject mix. You can always flip over and look at the other pathway too.</p>
+      <button class="btn btn--primary" id="sqStart">Start the quiz</button>
     </div>
 
     <!-- STEP 2: preference questions -->
@@ -321,15 +327,26 @@
 
     <!-- STEP 3: results -->
     <div class="sq-step" id="sqStepResults">
-      <h3>Your personalized recommendations</h3>
+      <h3>Here's what your answers point to</h3>
+      <p class="sq-verdict" id="sqVerdict"></p>
+
+      <div class="pathway-switch" id="sqPathwaySwitch" role="tablist" aria-label="Compare pathways"></div>
+      <p class="sq-switch-hint" id="sqSwitchHint"></p>
+      <div class="sq-mix" id="sqMix"></div>
+
+      <h4 class="sq-subhead">Your top subjects overall</h4>
       <div class="sq-results" id="sqResults"></div>
-      <button class="btn btn--primary" id="sqToBuilder">Build my plan →</button>
-      <button class="btn btn--ghost" id="sqRetake">Retake quiz</button>
+
+      <div class="builder-actions">
+        <button class="btn btn--primary" id="sqToBuilder">Build my plan</button>
+        <button class="btn btn--ghost" id="sqRetake">Retake quiz</button>
+      </div>
     </div>
 
     <!-- STEP 4: manual builder -->
     <div class="sq-step" id="sqStepBuilder">
       <h3>Build your plan</h3>
+      <div class="pathway-switch pathway-switch--small" id="builderSwitch" role="tablist" aria-label="Switch pathway"></div>
       <p class="game__intro" id="builderRules"></p>
 
       <div class="progress-bar progress-bar--builder"><div class="progress-bar__fill" id="builderFill"></div></div>
@@ -339,7 +356,110 @@
 
       <div class="builder-actions">
         <button class="btn btn--primary" id="builderDownload" disabled>Download my plan</button>
-        <button class="btn btn--ghost" id="builderReset">Reset</button>
+        <button class="btn btn--ghost" id="builderReset">Reset to suggested mix</button>
+        <button class="btn btn--ghost" id="builderBackResults">Back to results</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PERSONAL STUDY PLANNER ============ -->
+<section id="planner" class="section planner">
+  <div class="section__inner">
+    <p class="eyebrow">Personal study planner</p>
+    <h2 class="section__title">Tell it what's coming up. It'll write your study notes for each day.</h2>
+
+    <div class="planner-layout">
+      <!-- Notebook: the four inputs -->
+      <div class="notebook" id="plForm">
+        <div class="notebook__block">
+          <h3><span class="notebook__step">1</span>Your subjects</h3>
+          <div class="pl-row">
+            <input type="text" id="plSubjectInput" class="pl-input" placeholder="e.g. Physics" list="plSubjectSuggestions" aria-label="Subject name">
+            <button class="btn btn--primary btn--small" id="plSubjectAdd" type="button">Add</button>
+          </div>
+          <datalist id="plSubjectSuggestions"></datalist>
+          <div class="pl-chips" id="plSubjects"></div>
+          <button class="pl-link" id="plAddCore" type="button">+ Add Maths, English and a language</button>
+        </div>
+
+        <div class="notebook__block">
+          <h3><span class="notebook__step">2</span>Upcoming assessments</h3>
+          <div class="pl-grid">
+            <select id="plAssessSubject" class="pl-input" aria-label="Assessment subject"></select>
+            <input type="text" id="plAssessTitle" class="pl-input" placeholder="e.g. Criterion B test" aria-label="Assessment name">
+            <input type="date" id="plAssessDate" class="pl-input" aria-label="Assessment date">
+            <button class="btn btn--primary btn--small" id="plAssessAdd" type="button">Add</button>
+          </div>
+          <ul class="pl-list" id="plAssessList"></ul>
+        </div>
+
+        <div class="notebook__block">
+          <h3><span class="notebook__step">3</span>Topics you struggle with</h3>
+          <div class="pl-grid pl-grid--three">
+            <select id="plStruggleSubject" class="pl-input" aria-label="Struggle subject"></select>
+            <input type="text" id="plStruggleTopic" class="pl-input" placeholder="e.g. balancing equations" aria-label="Topic">
+            <button class="btn btn--primary btn--small" id="plStruggleAdd" type="button">Add</button>
+          </div>
+          <ul class="pl-list" id="plStruggleList"></ul>
+        </div>
+
+        <div class="notebook__block">
+          <h3><span class="notebook__step">4</span>How much time you have</h3>
+          <label class="pl-range">
+            <span>School days <strong id="plWeekdayOut">60 min</strong></span>
+            <input type="range" id="plWeekday" min="0" max="180" step="15" value="60">
+          </label>
+          <label class="pl-range">
+            <span>Weekends <strong id="plWeekendOut">90 min</strong></span>
+            <input type="range" id="plWeekend" min="0" max="240" step="15" value="90">
+          </label>
+        </div>
+
+        <p class="pl-error" id="plError" aria-live="polite"></p>
+        <div class="builder-actions">
+          <button class="btn btn--primary" id="plGenerate" type="button">Make my plan</button>
+          <button class="btn btn--ghost" id="plClear" type="button">Start over</button>
+        </div>
+      </div>
+
+      <!-- Board: generated sticky notes -->
+      <div class="pl-board-wrap">
+        <div class="pl-upcoming" id="plUpcoming"></div>
+        <div class="pl-board" id="plBoard">
+          <div class="pl-empty">
+            <p class="pl-empty__title">Your plan shows up here as sticky notes, one for each day.</p>
+            <p>Add your subjects and at least one assessment, set your time, then tap Make my plan.</p>
+          </div>
+        </div>
+        <div class="pl-scratch">
+          <label for="plScratch">Notes to self</label>
+          <textarea id="plScratch" rows="5" placeholder="Anything to remember: ask Ms. Rao about criterion D, borrow Aisha's lab notes…"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SMILEY SPRINT ============ -->
+<section id="play" class="section sprint-section">
+  <div class="section__inner">
+    <p class="eyebrow">Quick play</p>
+    <h2 class="section__title">Smiley Sprint: ten quick questions, one smiley jar.</h2>
+
+    <div class="sprint" id="sprint">
+      <div class="sprint__side">
+        <div class="sprint__face" id="sprintFace" aria-hidden="true">🙂</div>
+        <div class="sprint__stats">
+          <span>Smileys <strong id="sprintScore">0</strong></span>
+          <span>Streak <strong id="sprintStreak">0</strong></span>
+          <span>Best <strong id="sprintBest">0</strong></span>
+        </div>
+        <div class="sprint__jar" id="sprintJar" aria-label="Smiley jar"></div>
+      </div>
+      <div class="sprint__main">
+        <p class="sprint__count" id="sprintCount"></p>
+        <div id="sprintArea"></div>
       </div>
     </div>
   </div>
@@ -379,6 +499,8 @@
           <a href="#home" data-nav>Home</a>
           <a href="#transitions" data-nav>Classes &amp; Tracks</a>
           <a href="#subject-quiz" data-nav>Subject Quiz</a>
+          <a href="#planner" data-nav>Study Planner</a>
+          <a href="#play" data-nav>Smiley Sprint</a>
         </div>
 
         <div class="footer-links">
