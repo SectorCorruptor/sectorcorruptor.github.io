@@ -13,7 +13,31 @@
 
 <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="intro-open">
+
+<!-- ============ INTRO SCREEN (shows every time the site opens) ============ -->
+<!-- To change the group name, edit the text inside .intro__group below. -->
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-labelledby="introGroup">
+  <div class="intro__inner">
+    <p class="intro__kicker">A student guide to the IB Middle Years Programme, made by</p>
+    <h1 class="intro__group" id="introGroup">Ascension Archive</h1>
+    <p class="intro__sub"><span class="intro__badge">IB Compass</span> Start with this short introduction to the IB. It's the same video for MYP 1, MYP 2 and MYP 3.</p>
+
+    <div class="intro__video">
+      <iframe id="introVideo"
+        data-src="https://www.youtube-nocookie.com/embed/kJO04xtMqIs?rel=0&amp;modestbranding=1"
+        title="Introduction to the IB"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen></iframe>
+    </div>
+
+    <div class="intro__actions">
+      <button class="btn btn--sun" id="introEnter" type="button">Start exploring</button>
+      <a class="intro__yt" href="https://www.youtube.com/watch?v=kJO04xtMqIs" target="_blank" rel="noopener">Video not playing? Watch it on YouTube</a>
+    </div>
+  </div>
+</div>
 
 <!-- ============ NAVBAR ============ -->
 <header class="navbar" id="navbar">
@@ -110,6 +134,7 @@
         <div class="panel-copy">
           <p>Change hits weirdly. One day your schedule is simple, the next it's stacked and moving faster than you expect. You're suddenly dealing with more subjects, more switches, more things happening at once. It's not deep or emotional, it's just different. The pace shifts, the expectations shift, and you end up adjusting because there's no real alternative. You follow what's in front of you, you move to the next thing.</p>
           <blockquote class="pull-quote">"You don't need to have it figured out on day one. You just need a planner and a decent night's sleep."</blockquote>
+          <button class="watch-intro" type="button" data-open-intro><span aria-hidden="true">▶</span> Watch the intro to the IB</button>
         </div>
       </div>
 
@@ -173,6 +198,7 @@
         <div class="panel-copy">
           <p>MYP 3 is the year things stop being handed to you in small pieces. The tasks stretch out, the deadlines spread wider, and teachers expect you to manage your own time instead of waiting for reminders. At some point, the choices you'll make later start forming gradually. This is not really a warning or something too big, it's simply the point where school shifts from following instructions to figuring out how you work.</p>
           <blockquote class="pull-quote">"Bigger tasks aren't a punishment. They're practice for choosing your own path."</blockquote>
+          <button class="watch-intro" type="button" data-open-intro><span aria-hidden="true">▶</span> Watch the intro to the IB</button>
         </div>
       </div>
 
@@ -238,6 +264,7 @@
         <div class="panel-copy">
           <p>Welcome to the big one. At the end of MYP 3, you'll choose a subject pathway for MYP 4–5: Balanced or Sciences. It's not something you have to stick with forever. Most options stay open no matter which one you pick, unless you drop a subject from MYP 4, as long as you understand what each pathway leads toward. This isn't about predicting your future at 14–15, it's about choosing the kind of thinking you want to work with for the next two years.</p>
           <blockquote class="pull-quote">"Pick the pathway that matches how your brain likes to operate, not the one that sounds impressive when you say it out loud."</blockquote>
+          <button class="watch-intro" type="button" data-open-intro><span aria-hidden="true">▶</span> Watch the intro to the IB</button>
         </div>
       </div>
 
@@ -296,7 +323,7 @@
   <div class="glow glow--azure subject-quiz__glow" aria-hidden="true"></div>
   <div class="section__inner">
     <p class="eyebrow">MYP 4–5 subject selection</p>
-    <h2 class="section__title">Two pathways, four questions — find the subject mix that fits you.</h2>
+    <h2 class="section__title">Two pathways, ten questions — find the subject mix that fits you.</h2>
 
     <!-- STEP 1: intro to both pathways -->
     <div class="sq-step is-active" id="sqStepPathway">
@@ -312,12 +339,13 @@
           <span class="pathway-card__tag">For medicine, engineering, or pure science</span>
         </div>
       </div>
-      <p class="sq-intro">Answer four quick questions and we'll suggest a pathway and a subject mix. You can always flip over and look at the other pathway too.</p>
+      <p class="sq-intro">Answer ten quick questions and we'll suggest a pathway and a subject mix. You can always flip over and look at the other pathway too.</p>
       <button class="btn btn--primary" id="sqStart">Start the quiz</button>
     </div>
 
     <!-- STEP 2: preference questions -->
     <div class="sq-step" id="sqStepQuestions">
+      <div class="progress-bar sq-progress-bar"><div class="progress-bar__fill" id="sqProgressFill"></div></div>
       <div class="sq-question" id="sqQuestion"></div>
       <div class="sq-nav">
         <button class="btn btn--ghost" id="sqBack">Back</button>
@@ -426,6 +454,16 @@
       <!-- Board: generated sticky notes -->
       <div class="pl-board-wrap">
         <div class="pl-upcoming" id="plUpcoming"></div>
+        <div class="pl-weekbar" id="plWeekbar" hidden>
+          <button class="pl-weekbar__nav" id="plPrevWeek" type="button" aria-label="Previous week">‹</button>
+          <div class="pl-weekbar__info">
+            <p class="pl-weekbar__label" id="plWeekLabel"></p>
+            <p class="pl-weekbar__stats" id="plWeekStats"></p>
+            <div class="progress-bar pl-weekbar__bar"><div class="progress-bar__fill" id="plWeekFill"></div></div>
+          </div>
+          <button class="pl-weekbar__nav" id="plNextWeek" type="button" aria-label="Next week">›</button>
+        </div>
+        <p class="pl-updated" id="plUpdated" aria-live="polite"></p>
         <div class="pl-board" id="plBoard">
           <div class="pl-empty">
             <p class="pl-empty__title">Your plan shows up here as sticky notes, one for each day.</p>
@@ -445,7 +483,7 @@
 <section id="play" class="section sprint-section">
   <div class="section__inner">
     <p class="eyebrow">Quick play</p>
-    <h2 class="section__title">Smiley Sprint: ten quick questions, one smiley jar.</h2>
+    <h2 class="section__title">Smiley Sprint: the higher you climb, the harder it gets.</h2>
 
     <div class="sprint" id="sprint">
       <div class="sprint__side">
@@ -458,7 +496,11 @@
         <div class="sprint__jar" id="sprintJar" aria-label="Smiley jar"></div>
       </div>
       <div class="sprint__main">
-        <p class="sprint__count" id="sprintCount"></p>
+        <div class="sprint__top">
+          <span class="sprint__level" id="sprintLevel">Level 1 · Easy</span>
+          <p class="sprint__count" id="sprintCount"></p>
+        </div>
+        <div class="sprint__timer" id="sprintTimer" hidden><div class="sprint__timer-fill" id="sprintTimerFill"></div></div>
         <div id="sprintArea"></div>
       </div>
     </div>

@@ -27,6 +27,41 @@ const GEMINI_CONFIG = {
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------------------------------------------------------
+     INTRO SCREEN — group name + IB intro video.
+     Shows every time the site opens. The "Watch the intro"
+     buttons in MYP 1–3 reopen the same video.
+     --------------------------------------------------------- */
+  const intro = document.getElementById('intro');
+  const introVideo = document.getElementById('introVideo');
+  const introEnter = document.getElementById('introEnter');
+  let introReturnFocus = null;
+
+  function openIntro(fromButton) {
+    introReturnFocus = fromButton || null;
+    introVideo.src = introVideo.dataset.src;
+    introEnter.textContent = fromButton ? 'Back to the guide' : 'Start exploring';
+    intro.classList.remove('is-closing');
+    intro.hidden = false;
+    document.body.classList.add('intro-open');
+    introEnter.focus({ preventScroll: true });
+  }
+
+  function closeIntro() {
+    intro.classList.add('is-closing');
+    document.body.classList.remove('intro-open');
+    setTimeout(() => {
+      intro.hidden = true;
+      introVideo.src = ''; // stops the video
+      if (introReturnFocus) introReturnFocus.focus({ preventScroll: true });
+    }, 350);
+  }
+
+  introEnter.addEventListener('click', closeIntro);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !intro.hidden) closeIntro(); });
+  document.querySelectorAll('[data-open-intro]').forEach(btn => btn.addEventListener('click', () => openIntro(btn)));
+  openIntro(null);
+
+  /* ---------------------------------------------------------
      NAVBAR — mobile toggle + closing on link click
      --------------------------------------------------------- */
   const navToggle = document.getElementById('navToggle');
@@ -520,6 +555,61 @@ document.addEventListener('DOMContentLoaded', () => {
       ]
     },
     {
+      q: 'Which school trip would you pick?',
+      options: [
+        { text: 'A science museum or a real lab tour', scores: { Physics: 2, Chemistry: 1, Biology: 1 } },
+        { text: 'A parliament, a big company, or a historic site', scores: { History: 2, 'Business Studies': 1, Economics: 1 } },
+        { text: 'An art gallery, a concert, or a theatre show', scores: { Drama: 2, 'Visual Arts': 1, Music: 1 } },
+        { text: 'An outdoor adventure camp', scores: { 'Physical & Health Education': 2, Geography: 2 } }
+      ]
+    },
+    {
+      q: 'In a group project, which job do you grab first?',
+      options: [
+        { text: 'Researching the facts and checking they’re right', scores: { Biology: 1, Chemistry: 1, History: 1 } },
+        { text: 'Leading the team and pitching the idea', scores: { 'Business Studies': 2, Drama: 1 } },
+        { text: 'Designing the slides, poster, or logo', scores: { 'Digital Design': 2, 'Visual Arts': 1 } },
+        { text: 'Building and testing the model', scores: { 'Integrated Design': 2, Physics: 1 } }
+      ]
+    },
+    {
+      q: 'Which question would you most like answered?',
+      options: [
+        { text: 'Why do some diseases spread faster than others?', scores: { Biology: 3 } },
+        { text: 'Why are some countries richer than others?', scores: { Economics: 2, Geography: 1, 'Business Studies': 1 } },
+        { text: 'How do films and songs change the way you feel?', scores: { Music: 2, Drama: 1, 'Digital Design': 1 } },
+        { text: 'How do athletes train to get faster?', scores: { 'Physical & Health Education': 2, Biology: 1 } }
+      ]
+    },
+    {
+      q: 'Which of these feels the most satisfying?',
+      options: [
+        { text: 'Getting the right answer after a long calculation', scores: { Physics: 2, Chemistry: 2 } },
+        { text: 'Winning an argument with solid evidence', scores: { History: 2, Economics: 1 } },
+        { text: 'Finishing something you made from scratch', scores: { 'Integrated Design': 2, 'Visual Arts': 1 } },
+        { text: 'Beating your own personal best', scores: { 'Physical & Health Education': 2 } }
+      ]
+    },
+    {
+      q: 'If you could build any app, it would be…',
+      options: [
+        { text: 'A tracker that measures pollution where you live', scores: { Geography: 2, Chemistry: 1, Biology: 1 } },
+        { text: 'An online shop that sells something you made', scores: { 'Business Studies': 3 } },
+        { text: 'A game or a music-making app', scores: { 'Digital Design': 2, Music: 2 } },
+        { text: 'A fitness or sports coaching app', scores: { 'Physical & Health Education': 2, 'Digital Design': 1 } }
+      ]
+    },
+    {
+      q: 'How do you like to show what you’ve learned?',
+      options: [
+        { text: 'A lab report full of data and graphs', scores: { Chemistry: 2, Physics: 1, Biology: 1 } },
+        { text: 'An essay or a debate', scores: { History: 2, 'Business Studies': 1 } },
+        { text: 'A performance, an artwork, or a video', scores: { 'Visual Arts': 2, Drama: 1, Music: 1 } },
+        { text: 'A working product or a live demo', scores: { 'Integrated Design': 2, 'Digital Design': 1 } }
+      ]
+    },
+    {
+      id: 'career',
       q: 'Picture life after the MYP. You lean toward…',
       options: [
         { text: 'A career in medicine, research, or engineering', scores: { Biology: 3, Chemistry: 2, Physics: 2 } },
@@ -579,8 +669,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function recommendPathway(scores) {
     const total = Object.values(scores).reduce((a, b) => a + b, 0) || 1;
     const sci = SCIENCES.reduce((a, s) => a + scores[s], 0);
-    const wantsScienceCareer = sqAnswers[3] === 0;
-    return (wantsScienceCareer || sci / total >= 0.4) ? 'sciences' : 'balanced';
+    const careerQ = sqQuestions.findIndex(q => q.id === 'career');
+    const wantsScienceCareer = sqAnswers[careerQ] === 0;
+    // Sciences if a science career is the goal, or science made up a big share of the answers
+    return (wantsScienceCareer || sci / total >= 0.38) ? 'sciences' : 'balanced';
   }
 
   // Picks the best-scoring subjects for each slot of a pathway.
@@ -617,6 +709,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderSqQuestion() {
     const item = sqQuestions[sqIndex];
     sqProgressEl.textContent = `Question ${sqIndex + 1} of ${sqQuestions.length}`;
+    document.getElementById('sqProgressFill').style.width = `${(sqIndex / sqQuestions.length) * 100}%`;
     sqQuestionEl.innerHTML = `<h3>${item.q}</h3><div class="sq-question__options"></div>`;
     const optWrap = sqQuestionEl.querySelector('.sq-question__options');
     item.options.forEach((opt, optIdx) => {
@@ -684,8 +777,8 @@ document.addEventListener('DOMContentLoaded', () => {
     sqResultsEl.innerHTML = '';
     sorted.slice(0, 7).forEach(([subj, score]) => {
       let badge = { label: 'Worth a look', cls: 'badge--worth' };
-      if (score >= 6) badge = { label: 'Strong pick', cls: 'badge--strong' };
-      else if (score >= 3) badge = { label: 'Great fit', cls: 'badge--great' };
+      if (score >= 9) badge = { label: 'Strong pick', cls: 'badge--strong' };
+      else if (score >= 5) badge = { label: 'Great fit', cls: 'badge--great' };
       const row = document.createElement('div');
       row.className = 'sq-result-row';
       row.innerHTML = `
@@ -1067,44 +1160,38 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ===========================================================
      PERSONAL STUDY PLANNER
      Inputs: subjects, assessments, struggle topics, time.
-     Output: one sticky note per day with 25-minute study tasks.
+     Output: a week-by-week board of sticky notes, one per day.
+     The plan rebuilds itself whenever an input changes, and
+     keeps any tasks you've already ticked off.
      Saved in this browser with localStorage.
      =========================================================== */
   const PL_KEY = 'ibcompass-planner-v1';
-  const BLOCK_MIN = 30;   // 25 minutes of study + 5 minute break
-  const MAX_DAYS = 28;
+  const MAX_WEEKS = 6;
+  const CORE_SUBJECTS = ['Mathematics', 'Language & Literature', 'Language Acquisition'];
+  const ALL_MYP_SUBJECTS = [...CORE_SUBJECTS, ...Object.keys(subjectMeta)];
 
-  const plState = loadPlanner() || {
+  const plState = Object.assign({
     subjects: [], assessments: [], struggles: [],
     weekday: 60, weekend: 90, plan: null, scratch: ''
-  };
+  }, loadPlanner() || {});
+  let plWeek = 0; // which week of the plan is on screen
 
   function loadPlanner() {
     try { return JSON.parse(localStorage.getItem(PL_KEY)); } catch (e) { return null; }
   }
   function savePlanner() {
-    try { localStorage.setItem(PL_KEY, JSON.stringify(plState)); } catch (e) { /* storage full or blocked — plan still works this session */ }
+    try { localStorage.setItem(PL_KEY, JSON.stringify(plState)); } catch (e) { /* storage blocked — plan still works this session */ }
   }
 
+  const $ = (id) => document.getElementById(id);
   const plEls = {
-    subjectInput: document.getElementById('plSubjectInput'),
-    subjects: document.getElementById('plSubjects'),
-    suggestions: document.getElementById('plSubjectSuggestions'),
-    assessSubject: document.getElementById('plAssessSubject'),
-    assessTitle: document.getElementById('plAssessTitle'),
-    assessDate: document.getElementById('plAssessDate'),
-    assessList: document.getElementById('plAssessList'),
-    struggleSubject: document.getElementById('plStruggleSubject'),
-    struggleTopic: document.getElementById('plStruggleTopic'),
-    struggleList: document.getElementById('plStruggleList'),
-    weekday: document.getElementById('plWeekday'),
-    weekend: document.getElementById('plWeekend'),
-    weekdayOut: document.getElementById('plWeekdayOut'),
-    weekendOut: document.getElementById('plWeekendOut'),
-    error: document.getElementById('plError'),
-    board: document.getElementById('plBoard'),
-    upcoming: document.getElementById('plUpcoming'),
-    scratch: document.getElementById('plScratch')
+    subjectInput: $('plSubjectInput'), subjects: $('plSubjects'), suggestions: $('plSubjectSuggestions'),
+    assessSubject: $('plAssessSubject'), assessTitle: $('plAssessTitle'), assessDate: $('plAssessDate'), assessList: $('plAssessList'),
+    struggleSubject: $('plStruggleSubject'), struggleTopic: $('plStruggleTopic'), struggleList: $('plStruggleList'),
+    weekday: $('plWeekday'), weekend: $('plWeekend'), weekdayOut: $('plWeekdayOut'), weekendOut: $('plWeekendOut'),
+    error: $('plError'), board: $('plBoard'), upcoming: $('plUpcoming'), scratch: $('plScratch'),
+    weekbar: $('plWeekbar'), weekLabel: $('plWeekLabel'), weekStats: $('plWeekStats'), weekFill: $('plWeekFill'),
+    prevWeek: $('plPrevWeek'), nextWeek: $('plNextWeek'), updated: $('plUpdated')
   };
 
   const escapeHtml = (str) => String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -1116,23 +1203,39 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function fromISO(iso) { const [y, m, d] = iso.split('-').map(Number); return new Date(y, m - 1, d); }
   function todayDate() { const t = new Date(); return new Date(t.getFullYear(), t.getMonth(), t.getDate()); }
+  function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
   function dayDiff(a, b) { return Math.round((b - a) / 86400000); }
   function niceDate(iso) { return fromISO(iso).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }); }
+  function shortDate(d) { return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' }); }
+  function mondayOf(d) { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; }
+  function fmtMins(m) { const h = Math.floor(m / 60), r = m % 60; return h ? `${h} h${r ? ` ${r} min` : ''}` : `${r} min`; }
 
-  // Autocomplete from the MYP subjects used elsewhere on the site
-  ['Language & Literature', 'Language Acquisition', 'Mathematics', ...Object.keys(subjectMeta)].forEach(s => {
+  ALL_MYP_SUBJECTS.forEach(s => {
     const o = document.createElement('option'); o.value = s; plEls.suggestions.appendChild(o);
   });
 
   function addSubject(name) {
     const clean = name.trim();
-    if (!clean) return;
-    if (plState.subjects.some(s => s.toLowerCase() === clean.toLowerCase())) return;
+    if (!clean) return false;
+    if (plState.subjects.some(s => s.toLowerCase() === clean.toLowerCase())) return false;
     plState.subjects.push(clean);
+    return true;
+  }
+
+  // Dropdowns always have something to pick: your subjects first, then every
+  // other MYP subject. Picking one you haven't added adds it for you.
+  function fillSubjectSelect(sel) {
+    const prev = sel.value;
+    const yours = plState.subjects;
+    const others = ALL_MYP_SUBJECTS.filter(s => !yours.includes(s));
+    let html = '<option value="" disabled>Choose a subject</option>';
+    if (yours.length) html += `<optgroup label="Your subjects">${yours.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('')}</optgroup>`;
+    html += `<optgroup label="${yours.length ? 'Other MYP subjects' : 'MYP subjects'}">${others.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('')}</optgroup>`;
+    sel.innerHTML = html;
+    sel.value = [...sel.options].some(o => o.value === prev && prev) ? prev : (yours[0] || '');
   }
 
   function renderPlannerInputs() {
-    // subject chips
     plEls.subjects.innerHTML = '';
     plState.subjects.forEach(s => {
       const chip = document.createElement('span');
@@ -1142,34 +1245,28 @@ document.addEventListener('DOMContentLoaded', () => {
         plState.subjects = plState.subjects.filter(x => x !== s);
         plState.assessments = plState.assessments.filter(a => a.subject !== s);
         plState.struggles = plState.struggles.filter(t => t.subject !== s);
-        savePlanner(); renderPlannerInputs();
+        inputsChanged();
       });
       plEls.subjects.appendChild(chip);
     });
 
-    // subject dropdowns
-    [plEls.assessSubject, plEls.struggleSubject].forEach(sel => {
-      const prev = sel.value;
-      sel.innerHTML = plState.subjects.length
-        ? plState.subjects.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('')
-        : '<option value="">Add a subject first</option>';
-      if (plState.subjects.includes(prev)) sel.value = prev;
-    });
+    fillSubjectSelect(plEls.assessSubject);
+    fillSubjectSelect(plEls.struggleSubject);
 
-    // assessments
     plEls.assessList.innerHTML = '';
     [...plState.assessments].sort((a, b) => a.date.localeCompare(b.date)).forEach(a => {
       const li = document.createElement('li');
-      li.innerHTML = `<span><strong>${escapeHtml(a.subject)}</strong> — ${escapeHtml(a.title)} <em>${niceDate(a.date)}</em></span>
+      const past = fromISO(a.date) < todayDate();
+      li.className = past ? 'is-past' : '';
+      li.innerHTML = `<span><strong>${escapeHtml(a.subject)}</strong> — ${escapeHtml(a.title)} <em>${niceDate(a.date)}${past ? ' (done)' : ''}</em></span>
         <button type="button" aria-label="Remove assessment">×</button>`;
       li.querySelector('button').addEventListener('click', () => {
         plState.assessments = plState.assessments.filter(x => x.id !== a.id);
-        savePlanner(); renderPlannerInputs();
+        inputsChanged();
       });
       plEls.assessList.appendChild(li);
     });
 
-    // struggles
     plEls.struggleList.innerHTML = '';
     plState.struggles.forEach(t => {
       const li = document.createElement('li');
@@ -1177,66 +1274,109 @@ document.addEventListener('DOMContentLoaded', () => {
         <button type="button" aria-label="Remove topic">×</button>`;
       li.querySelector('button').addEventListener('click', () => {
         plState.struggles = plState.struggles.filter(x => x.id !== t.id);
-        savePlanner(); renderPlannerInputs();
+        inputsChanged();
       });
       plEls.struggleList.appendChild(li);
     });
 
     plEls.weekday.value = plState.weekday;
     plEls.weekend.value = plState.weekend;
-    plEls.weekdayOut.textContent = `${plState.weekday} min`;
-    plEls.weekendOut.textContent = `${plState.weekend} min`;
+    plEls.weekdayOut.textContent = fmtMins(plState.weekday);
+    plEls.weekendOut.textContent = fmtMins(plState.weekend);
   }
 
-  document.getElementById('plSubjectAdd').addEventListener('click', () => {
+  // Every edit goes through here: save, redraw the form, and — if a plan
+  // already exists — rebuild it straight away so it never goes stale.
+  let plUpdateTimer = null;
+  function inputsChanged({ redrawInputs = true } = {}) {
+    if (redrawInputs) renderPlannerInputs();
+    if (plState.plan) {
+      plState.plan = generatePlan(plState.plan);
+      renderBoard();
+      plEls.updated.textContent = 'Plan updated. Ticked tasks are kept.';
+      clearTimeout(plUpdateTimer);
+      plUpdateTimer = setTimeout(() => { plEls.updated.textContent = ''; }, 2500);
+    }
+    savePlanner();
+  }
+
+  $('plSubjectAdd').addEventListener('click', () => {
+    if (!plEls.subjectInput.value.trim()) { plEls.error.textContent = 'Type a subject name first.'; return; }
+    plEls.error.textContent = '';
     addSubject(plEls.subjectInput.value);
     plEls.subjectInput.value = '';
-    savePlanner(); renderPlannerInputs();
+    inputsChanged();
     plEls.subjectInput.focus();
   });
   plEls.subjectInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('plSubjectAdd').click(); }
+    if (e.key === 'Enter') { e.preventDefault(); $('plSubjectAdd').click(); }
   });
-  document.getElementById('plAddCore').addEventListener('click', () => {
-    ['Mathematics', 'Language & Literature', 'Language Acquisition'].forEach(addSubject);
-    savePlanner(); renderPlannerInputs();
+  $('plAddCore').addEventListener('click', () => {
+    CORE_SUBJECTS.forEach(addSubject);
+    inputsChanged();
   });
 
   plEls.assessDate.min = toISO(todayDate());
-  document.getElementById('plAssessAdd').addEventListener('click', () => {
+  $('plAssessAdd').addEventListener('click', () => {
     const subject = plEls.assessSubject.value;
     const title = plEls.assessTitle.value.trim();
     const date = plEls.assessDate.value;
-    if (!subject) { plEls.error.textContent = 'Add a subject in step 1 before adding assessments.'; return; }
+    if (!subject) { plEls.error.textContent = 'Choose a subject for the assessment.'; return; }
     if (!title || !date) { plEls.error.textContent = 'Give the assessment a name and a date.'; return; }
     if (fromISO(date) < todayDate()) { plEls.error.textContent = 'That date has already passed. Pick today or later.'; return; }
+    if (dayDiff(todayDate(), fromISO(date)) > MAX_WEEKS * 7) { plEls.error.textContent = `The planner looks ${MAX_WEEKS} weeks ahead. Add this one closer to the date.`; return; }
     plEls.error.textContent = '';
+    addSubject(subject);
     plState.assessments.push({ id: uid(), subject, title, date });
     plEls.assessTitle.value = ''; plEls.assessDate.value = '';
-    savePlanner(); renderPlannerInputs();
+    inputsChanged();
+  });
+  plEls.assessTitle.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); $('plAssessAdd').click(); }
   });
 
-  document.getElementById('plStruggleAdd').addEventListener('click', () => {
+  $('plStruggleAdd').addEventListener('click', () => {
     const subject = plEls.struggleSubject.value;
     const topic = plEls.struggleTopic.value.trim();
-    if (!subject) { plEls.error.textContent = 'Add a subject in step 1 before adding topics.'; return; }
+    if (!subject) { plEls.error.textContent = 'Choose a subject for the topic.'; return; }
     if (!topic) { plEls.error.textContent = 'Type the topic you find tricky.'; return; }
     plEls.error.textContent = '';
+    addSubject(subject);
     plState.struggles.push({ id: uid(), subject, topic });
     plEls.struggleTopic.value = '';
-    savePlanner(); renderPlannerInputs();
+    inputsChanged();
   });
   plEls.struggleTopic.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('plStruggleAdd').click(); }
+    if (e.key === 'Enter') { e.preventDefault(); $('plStruggleAdd').click(); }
   });
 
-  plEls.weekday.addEventListener('input', () => { plState.weekday = +plEls.weekday.value; plEls.weekdayOut.textContent = `${plState.weekday} min`; savePlanner(); });
-  plEls.weekend.addEventListener('input', () => { plState.weekend = +plEls.weekend.value; plEls.weekendOut.textContent = `${plState.weekend} min`; savePlanner(); });
+  // Sliders: update the label live, rebuild the plan when the thumb is released.
+  [['weekday', 'weekdayOut'], ['weekend', 'weekendOut']].forEach(([key, out]) => {
+    plEls[key].addEventListener('input', () => {
+      plState[key] = +plEls[key].value;
+      plEls[out].textContent = fmtMins(plState[key]);
+    });
+    plEls[key].addEventListener('change', () => inputsChanged({ redrawInputs: false }));
+  });
 
   plEls.scratch.value = plState.scratch || '';
   plEls.scratch.addEventListener('input', () => { plState.scratch = plEls.scratch.value; savePlanner(); });
 
   /* ---- plan generation ---- */
+
+  // Splits a day's minutes into study blocks that add up to the time you have
+  // (e.g. 60 → 2 × 30, 45 → 1 × 45, 90 → 3 × 30). Blocks are 20–45 minutes.
+  function splitMinutes(total) {
+    if (total < 15) return [];
+    let n = Math.max(1, Math.floor(total / 30));
+    while (total / n > 45) n++;
+    const base = Math.floor(total / n / 5) * 5;
+    const blocks = Array(n).fill(base);
+    let left = total - base * n;
+    for (let i = 0; left >= 5; i = (i + 1) % n) { blocks[i] += 5; left -= 5; }
+    return blocks;
+  }
+
   function taskForAssessment(a, daysLeft, counters, firstToday) {
     const topics = plState.struggles.filter(t => t.subject === a.subject);
     const n = counters[a.id] = (counters[a.id] || 0) + 1;
@@ -1263,29 +1403,41 @@ document.addEventListener('DOMContentLoaded', () => {
   function taskForReview(subject, counters) {
     const topics = plState.struggles.filter(t => t.subject === subject);
     const n = counters[subject] = (counters[subject] || 0) + 1;
-    if (topics.length) return `Keep ${topics[(n - 1) % topics.length].topic} fresh: make 10 flashcards and test yourself.`;
+    if (topics.length) return n % 2
+      ? `Keep ${topics[(n - 1) % topics.length].topic} fresh: make 10 flashcards and test yourself.`
+      : `${topics[(n - 1) % topics.length].topic}: do three practice questions and check your answers.`;
     return n % 2
       ? `Tidy up this week's ${subject} notes and circle anything that still feels unclear.`
       : `Skim your latest ${subject} lesson and write three things you remember without looking.`;
   }
 
-  function generatePlan() {
+  // oldPlan (optional) lets ticks survive a rebuild: a task stays ticked if
+  // the same day still has the same task.
+  function generatePlan(oldPlan) {
+    const doneKeys = new Set();
+    (oldPlan || []).forEach(d => d.tasks.forEach(t => { if (t.done) doneKeys.add(`${d.date}|${t.subject}|${t.text}`); }));
+
     const today = todayDate();
     const upcoming = plState.assessments
       .filter(a => fromISO(a.date) >= today)
       .sort((a, b) => a.date.localeCompare(b.date));
-    const lastDay = upcoming.length ? dayDiff(today, fromISO(upcoming[upcoming.length - 1].date)) : 6;
-    const horizon = Math.min(Math.max(lastDay, 6), MAX_DAYS - 1);
+
+    // Always plan to the end of a full week (Sunday); stretch to the last assessment.
+    const lastAssess = upcoming.length ? fromISO(upcoming[upcoming.length - 1].date) : today;
+    let end = addDays(mondayOf(lastAssess), 6);
+    const minEnd = addDays(mondayOf(today), 6);
+    if (end < minEnd) end = minEnd;
+    const horizon = Math.min(dayDiff(today, end), MAX_WEEKS * 7 - 1);
 
     const usage = {};
     const counters = {};
     const days = [];
 
     for (let d = 0; d <= horizon; d++) {
-      const date = new Date(today); date.setDate(today.getDate() + d);
+      const date = addDays(today, d);
       const iso = toISO(date);
       const weekend = date.getDay() === 0 || date.getDay() === 6;
-      const minutes = weekend ? plState.weekend : plState.weekday;
+      const available = weekend ? plState.weekend : plState.weekday;
       const tasks = [];
       const dueToday = upcoming.filter(a => a.date === iso);
 
@@ -1294,26 +1446,26 @@ document.addEventListener('DOMContentLoaded', () => {
         text: `${a.title} is today. Quick look over your summary, then trust your prep.`
       }));
 
-      let blocks = Math.floor(minutes / BLOCK_MIN);
-      if (blocks === 0 && minutes >= 15) blocks = 1;
+      // The 10-minute check on a due day comes out of that day's time.
+      const blocks = splitMinutes(Math.max(0, available - dueToday.length * 10));
       const usedToday = new Set(dueToday.map(a => a.subject));
-      const countToday = {};   // max 2 blocks per assessment/subject per day
+      const countToday = {}; // max 2 blocks per assessment/subject per day
 
-      for (let b = 0; b < blocks; b++) {
+      for (const mins of blocks) {
         const candidates = [];
         upcoming.forEach(a => {
           const left = dayDiff(date, fromISO(a.date));
-          if (left < 1) return;
+          if (left < 1 || (countToday[a.id] || 0) >= 2) return;
           const topics = plState.struggles.filter(t => t.subject === a.subject).length;
           let w = (1 + 0.5 * topics) * (left <= 3 ? 3 : 1) / left;
-          if ((countToday[a.id] || 0) >= 2) return;
           if (usedToday.has(a.subject)) w *= 0.3;
           w /= 1 + (usage[a.id] || 0) * 0.35;
           candidates.push({ w, kind: 'assess', a, left });
         });
         plState.subjects.forEach(s => {
-          if (upcoming.some(a => a.subject === s && dayDiff(date, fromISO(a.date)) >= 1)) return;
           if ((countToday[s] || 0) >= 2) return;
+          if (dueToday.some(a => a.subject === s)) return; // no extra review on its own test day
+          if (upcoming.some(a => a.subject === s && dayDiff(date, fromISO(a.date)) >= 1)) return;
           let w = 0.12 + 0.05 * plState.struggles.filter(t => t.subject === s).length;
           if (usedToday.has(s)) w *= 0.3;
           w /= 1 + (usage[s] || 0) * 0.5;
@@ -1322,20 +1474,25 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!candidates.length) break;
         candidates.sort((x, y) => y.w - x.w);
         const pick = candidates[0];
+        let subject, text;
         if (pick.kind === 'assess') {
           const firstToday = !countToday[pick.a.id];
           usage[pick.a.id] = (usage[pick.a.id] || 0) + 1;
           countToday[pick.a.id] = (countToday[pick.a.id] || 0) + 1;
-          usedToday.add(pick.a.subject);
-          tasks.push({ id: uid(), subject: pick.a.subject, mins: 25, done: false, text: taskForAssessment(pick.a, pick.left, counters, firstToday) });
+          subject = pick.a.subject;
+          text = taskForAssessment(pick.a, pick.left, counters, firstToday);
         } else {
           usage[pick.s] = (usage[pick.s] || 0) + 1;
           countToday[pick.s] = (countToday[pick.s] || 0) + 1;
-          usedToday.add(pick.s);
-          tasks.push({ id: uid(), subject: pick.s, mins: 25, done: false, text: taskForReview(pick.s, counters) });
+          subject = pick.s;
+          text = taskForReview(pick.s, counters);
         }
+        usedToday.add(subject);
+        tasks.push({ id: uid(), subject, mins, done: false, text });
       }
-      days.push({ date: iso, minutes, tasks });
+
+      tasks.forEach(t => { if (doneKeys.has(`${iso}|${t.subject}|${t.text}`)) t.done = true; });
+      days.push({ date: iso, minutes: available, tasks });
     }
     return days;
   }
@@ -1354,34 +1511,70 @@ document.addEventListener('DOMContentLoaded', () => {
     }).join('');
   }
 
+  // Groups the plan's remaining days into Monday–Sunday weeks.
+  function planWeeks() {
+    const todayIso = toISO(todayDate());
+    const weeks = [];
+    (plState.plan || []).filter(d => d.date >= todayIso).forEach(day => {
+      const key = toISO(mondayOf(fromISO(day.date)));
+      let w = weeks.find(x => x.key === key);
+      if (!w) { w = { key, days: [] }; weeks.push(w); }
+      w.days.push(day);
+    });
+    return weeks;
+  }
+
+  function updateWeekStats(week) {
+    const tasks = week.days.flatMap(d => d.tasks);
+    const planned = tasks.reduce((a, t) => a + t.mins, 0);
+    const done = tasks.filter(t => t.done);
+    const doneMins = done.reduce((a, t) => a + t.mins, 0);
+    plEls.weekStats.textContent = `${done.length} of ${tasks.length} tasks done · ${fmtMins(doneMins)} of ${fmtMins(planned)} studied`;
+    plEls.weekFill.style.width = (planned ? Math.round(doneMins / planned * 100) : 0) + '%';
+  }
+
   function renderBoard() {
     renderUpcoming();
-    if (!plState.plan) return;
-    const todayIso = toISO(todayDate());
-    // Drop days that are already in the past
-    const days = plState.plan.filter(d => d.date >= todayIso);
-    plEls.board.innerHTML = '';
-    if (!days.length) {
+    if (!plState.plan) { plEls.weekbar.hidden = true; return; }
+    const weeks = planWeeks();
+    if (!weeks.length) {
+      plEls.weekbar.hidden = true;
       plEls.board.innerHTML = '<div class="pl-empty"><p class="pl-empty__title">This plan has run out of days.</p><p>Add your next assessments and tap Make my plan again.</p></div>';
       return;
     }
-    days.forEach((day, i) => {
+    plWeek = Math.min(Math.max(plWeek, 0), weeks.length - 1);
+    const week = weeks[plWeek];
+    const monday = fromISO(week.key);
+
+    plEls.weekbar.hidden = false;
+    plEls.weekLabel.textContent = `${plWeek === 0 ? 'This week' : plWeek === 1 ? 'Next week' : `Week ${plWeek + 1}`} · ${shortDate(monday)} – ${shortDate(addDays(monday, 6))}`;
+    plEls.prevWeek.disabled = plWeek === 0;
+    plEls.nextWeek.disabled = plWeek === weeks.length - 1;
+    updateWeekStats(week);
+
+    const todayIso = toISO(todayDate());
+    const tomorrowIso = toISO(addDays(todayDate(), 1));
+    plEls.board.innerHTML = '';
+    week.days.forEach((day, i) => {
       const note = document.createElement('article');
       const hasDue = day.tasks.some(t => t.due);
-      const rel = day.date === todayIso ? 'Today' : (i === 1 && days[0].date === todayIso ? 'Tomorrow' : '');
-      note.className = 'pl-note' + (hasDue ? ' pl-note--due' : '');
+      const rel = day.date === todayIso ? 'Today' : day.date === tomorrowIso ? 'Tomorrow' : '';
+      const planned = day.tasks.reduce((a, t) => a + t.mins, 0);
+      note.className = 'pl-note' + (hasDue ? ' pl-note--due' : '') + (day.date === todayIso ? ' pl-note--today' : '');
       note.style.setProperty('--tilt', `${((i * 37) % 5) - 2}deg`);
-      note.style.setProperty('--note', NOTE_COLORS[i % NOTE_COLORS.length]);
-      const doneCount = day.tasks.filter(t => t.done).length;
+      note.style.setProperty('--note', NOTE_COLORS[fromISO(day.date).getDay() % NOTE_COLORS.length]);
       note.innerHTML = `
         <header class="pl-note__head">
           <h4>${niceDate(day.date)}</h4>
           ${rel ? `<span class="pl-note__rel">${rel}</span>` : ''}
         </header>
-        ${day.tasks.length ? `<ul class="pl-note__tasks"></ul>
-          <p class="pl-note__foot">${doneCount} of ${day.tasks.length} done</p>`
-          : `<p class="pl-note__rest">${day.minutes ? 'Nothing due. Light review only if you feel like it.' : 'Rest day. No study planned.'}</p>`}`;
+        ${day.tasks.length ? `<p class="pl-note__time">${fmtMins(planned)} planned</p><ul class="pl-note__tasks"></ul>
+          <p class="pl-note__foot"></p>`
+          : `<p class="pl-note__rest">${day.minutes ? 'Nothing to plan yet. Add a subject or assessment.' : 'Rest day. No study planned.'}</p>`}`;
       const ul = note.querySelector('.pl-note__tasks');
+      const foot = note.querySelector('.pl-note__foot');
+      const updateFoot = () => { if (foot) foot.textContent = `${day.tasks.filter(x => x.done).length} of ${day.tasks.length} done`; };
+      updateFoot();
       day.tasks.forEach(t => {
         const li = document.createElement('li');
         li.className = t.done ? 'is-done' : '';
@@ -1391,75 +1584,128 @@ document.addEventListener('DOMContentLoaded', () => {
         li.querySelector('input').addEventListener('change', (e) => {
           t.done = e.target.checked;
           li.classList.toggle('is-done', t.done);
-          note.querySelector('.pl-note__foot').textContent = `${day.tasks.filter(x => x.done).length} of ${day.tasks.length} done`;
+          updateFoot();
+          updateWeekStats(week);
           savePlanner();
         });
-        ul && ul.appendChild(li);
+        ul.appendChild(li);
       });
       plEls.board.appendChild(note);
     });
   }
 
-  document.getElementById('plGenerate').addEventListener('click', () => {
+  plEls.prevWeek.addEventListener('click', () => { plWeek--; renderBoard(); });
+  plEls.nextWeek.addEventListener('click', () => { plWeek++; renderBoard(); });
+
+  $('plGenerate').addEventListener('click', () => {
     if (!plState.subjects.length) { plEls.error.textContent = 'Add at least one subject in step 1.'; return; }
     if (!plState.weekday && !plState.weekend) { plEls.error.textContent = 'Set some study time in step 4 — even 15 minutes counts.'; return; }
     plEls.error.textContent = '';
-    plState.plan = generatePlan();
+    plState.plan = generatePlan(plState.plan);
+    plWeek = 0;
     savePlanner();
     renderBoard();
-    plEls.board.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    plEls.weekbar.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
-  document.getElementById('plClear').addEventListener('click', () => {
+  $('plClear').addEventListener('click', () => {
     if (!confirm('Clear your subjects, assessments, topics and plan?')) return;
     Object.assign(plState, { subjects: [], assessments: [], struggles: [], weekday: 60, weekend: 90, plan: null, scratch: '' });
     plEls.scratch.value = '';
+    plWeek = 0;
     savePlanner();
     renderPlannerInputs();
     plEls.upcoming.innerHTML = '';
+    plEls.weekbar.hidden = true;
     plEls.board.innerHTML = `<div class="pl-empty"><p class="pl-empty__title">Your plan shows up here as sticky notes, one for each day.</p>
       <p>Add your subjects and at least one assessment, set your time, then tap Make my plan.</p></div>`;
   });
 
   renderPlannerInputs();
+  // A saved plan from an earlier visit is rebuilt from today, keeping ticks.
+  if (plState.plan) { plState.plan = generatePlan(plState.plan); savePlanner(); }
   renderBoard();
 
   /* ===========================================================
-     SMILEY SPRINT — quick quiz that fills a smiley jar
+     SMILEY SPRINT — gets harder the higher you climb.
+     Every 3 right answers moves you up a level:
+       Level 1 Easy    — 3 choices, no timer, worth 1
+       Level 2 Medium  — 4 choices, no timer, worth 2
+       Level 3 Hard    — 4 choices, 20-second timer, worth 3
+       Level 4 Expert  — 4 choices, 12-second timer, worth 4
      =========================================================== */
-  const sprintPool = [
-    { q: 'How are you graded on most MYP tasks?', options: ['One overall percentage', 'Criteria A, B, C and D', 'Only a final exam'], answer: 1 },
-    { q: 'What does ATL stand for?', options: ['Approaches to Learning', 'Advanced Test Levels', 'All Topics Listed'], answer: 0 },
-    { q: 'How many MYP subject groups are there?', options: ['Six', 'Eight', 'Ten'], answer: 1 },
-    { q: 'When do you complete the Personal Project?', options: ['MYP 1', 'MYP 3', 'The final MYP year'], answer: 2 },
-    { q: 'What is a Statement of Inquiry?', options: ['The big idea a unit explores', 'A letter to your parents', 'Your end-of-year report'], answer: 0 },
-    { q: 'Which two pathways can you pick for MYP 4–5?', options: ['Arts or Sport', 'Balanced or Sciences', 'Easy or Hard'], answer: 1 },
-    { q: 'In the Sciences pathway, how many sciences do you take?', options: ['One', 'Two', 'All three'], answer: 2 },
-    { q: 'Which humanities subject is on offer here?', options: ['Business Studies', 'Astrology', 'Cooking'], answer: 0 },
-    { q: 'Service as Action is about…', options: ['Helping your community', 'Serving lunch in the canteen', 'Extra homework'], answer: 0 },
-    { q: 'Best first move when a long task is set?', options: ['Wait until the week before', 'Split it into smaller deadlines', 'Ask a friend to do it'], answer: 1 },
-    { q: 'A good length for one focused study block?', options: ['About 25 minutes', 'Three hours straight', 'Two minutes'], answer: 0 },
-    { q: 'Which design subject is in the builder?', options: ['Integrated Design', 'Fashion Design', 'Garden Design'], answer: 0 },
-    { q: 'Which subjects do you keep no matter the pathway?', options: ['Drama and Music', 'Language & Literature, Language Acquisition, Maths', 'Only PE'], answer: 1 },
-    { q: 'Rereading notes vs. quizzing yourself — which sticks better?', options: ['Rereading', 'Quizzing yourself', 'They are exactly the same'], answer: 1 },
-    { q: 'Your pathway choice at 14 is…', options: ['Locked forever', 'A direction, and most options stay open', 'Chosen for you'], answer: 1 }
+  const SPRINT_LEVELS = [
+    { name: 'Easy', time: 0, points: 1, token: '🙂' },
+    { name: 'Medium', time: 0, points: 2, token: '😊' },
+    { name: 'Hard', time: 20, points: 3, token: '😎' },
+    { name: 'Expert', time: 12, points: 4, token: '🤩' }
   ];
-  const SPRINT_LEN = 10;
-  const SPRINT_KEY = 'ibcompass-sprint-best';
+  const SPRINT_LEN = 12;
+  const LEVEL_UP_EVERY = 3;
+  const SPRINT_KEY = 'ibcompass-sprint-best-v2';
+
+  // answer = index of the correct option
+  const sprintPool = [
+    // Level 1 — easy
+    [
+      { q: 'How are you graded on most MYP tasks?', options: ['One overall percentage', 'Criteria A, B, C and D', 'Only a final exam'], answer: 1 },
+      { q: 'What does ATL stand for?', options: ['Approaches to Learning', 'Advanced Test Levels', 'All Topics Listed'], answer: 0 },
+      { q: 'How many MYP subject groups are there?', options: ['Six', 'Eight', 'Ten'], answer: 1 },
+      { q: 'Service as Action is about…', options: ['Helping your community', 'Serving lunch in the canteen', 'Extra homework'], answer: 0 },
+      { q: 'Which two pathways can you pick for MYP 4–5?', options: ['Arts or Sport', 'Balanced or Sciences', 'Easy or Hard'], answer: 1 },
+      { q: 'Best first move when a long task is set?', options: ['Wait until the week before', 'Split it into smaller deadlines', 'Ask a friend to do it'], answer: 1 },
+      { q: 'A good length for one focused study block?', options: ['About 25–30 minutes', 'Three hours straight', 'Two minutes'], answer: 0 },
+      { q: 'Rereading notes vs. quizzing yourself — which sticks better?', options: ['Rereading', 'Quizzing yourself', 'They are exactly the same'], answer: 1 },
+      { q: 'What is a Statement of Inquiry?', options: ['The big idea a unit explores', 'A letter to your parents', 'Your end-of-year report'], answer: 0 }
+    ],
+    // Level 2 — medium
+    [
+      { q: 'What is the highest level you can get on one MYP criterion?', options: ['4', '7', '8', '10'], answer: 2 },
+      { q: 'Final MYP subject grades run from…', options: ['A to F', '1 to 7', '0 to 100', '1 to 10'], answer: 1 },
+      { q: 'In which year is the Personal Project completed?', options: ['MYP 1', 'MYP 3', 'MYP 4', 'MYP 5'], answer: 3 },
+      { q: 'Which of these is one of the five ATL skill categories?', options: ['Self-management', 'Memorising', 'Speed-reading', 'Competing'], answer: 0 },
+      { q: 'Which subject group does Economics belong to?', options: ['Sciences', 'Individuals & Societies', 'Mathematics', 'Design'], answer: 1 },
+      { q: 'Contexts like "Identities and relationships" are called…', options: ['Key concepts', 'Global contexts', 'ATL skills', 'Criteria'], answer: 1 },
+      { q: 'Which of these is an MYP key concept?', options: ['Photosynthesis', 'Aesthetics', 'Algebra', 'Punctuation'], answer: 1 },
+      { q: 'In the Sciences pathway here, how many humanities do you take?', options: ['None', 'One', 'Two', 'Three'], answer: 2 }
+    ],
+    // Level 3 — hard (timed)
+    [
+      { q: 'How many global contexts does the MYP use?', options: ['4', '6', '8', '16'], answer: 1 },
+      { q: 'The Personal Project is assessed on how many criteria?', options: ['2', '3', '4', '5'], answer: 1 },
+      { q: '"Managing your time" belongs to which ATL category?', options: ['Communication', 'Social', 'Self-management', 'Research'], answer: 2 },
+      { q: 'Max total across four criteria in one subject?', options: ['28', '30', '32', '40'], answer: 2 },
+      { q: 'Which is NOT an IB learner profile attribute?', options: ['Inquirers', 'Risk-takers', 'Reflective', 'Competitive'], answer: 3 },
+      { q: 'The MYP is designed for students aged roughly…', options: ['5–10', '11–16', '16–19', '18–22'], answer: 1 },
+      { q: 'Which of these is an MYP global context?', options: ['Money and markets', 'Fairness and development', 'Sports and games', 'Nature and weather'], answer: 1 },
+      { q: 'How many ATL skill categories are there?', options: ['3', '5', '8', '10'], answer: 1 }
+    ],
+    // Level 4 — expert (fast timer)
+    [
+      { q: 'How many IB learner profile attributes are there?', options: ['6', '8', '10', '12'], answer: 2 },
+      { q: 'How many MYP key concepts are there?', options: ['8', '12', '16', '20'], answer: 2 },
+      { q: 'The four IB programmes are PYP, MYP, DP and…', options: ['CP', 'SP', 'HP', 'TP'], answer: 0 },
+      { q: 'The Community Project is usually done in…', options: ['MYP 1', 'MYP 2', 'MYP 3 or 4', 'MYP 5 only'], answer: 2 },
+      { q: 'A criteria total of 28–32 converts to which grade?', options: ['5', '6', '7', '8'], answer: 2 },
+      { q: 'A criteria total of 15–18 converts to which grade?', options: ['3', '4', '5', '6'], answer: 1 },
+      { q: 'How many Service as Action learning outcomes are there?', options: ['3', '5', '7', '9'], answer: 2 },
+      { q: 'Which is NOT one of the six global contexts?', options: ['Personal and cultural expression', 'Orientation in space and time', 'Globalization and sustainability', 'Science and society'], answer: 3 }
+    ]
+  ];
 
   const sprintEls = {
-    face: document.getElementById('sprintFace'),
-    score: document.getElementById('sprintScore'),
-    streak: document.getElementById('sprintStreak'),
-    best: document.getElementById('sprintBest'),
-    jar: document.getElementById('sprintJar'),
-    count: document.getElementById('sprintCount'),
-    area: document.getElementById('sprintArea')
+    face: $('sprintFace'), score: $('sprintScore'), streak: $('sprintStreak'), best: $('sprintBest'),
+    jar: $('sprintJar'), count: $('sprintCount'), area: $('sprintArea'), level: $('sprintLevel'),
+    timer: $('sprintTimer'), timerFill: $('sprintTimerFill'), box: $('sprint')
   };
-  let sprintQs = [], sprintI = 0, sprintScore = 0, sprintStreak = 0;
+  let sprintQNum = 0, sprintScore = 0, sprintStreak = 0, sprintCorrect = 0, sprintLevel = 0, sprintTopLevel = 0;
+  let sprintUsed = [];
+  let sprintTimerId = null;
   let sprintBest = 0;
   try { sprintBest = +localStorage.getItem(SPRINT_KEY) || 0; } catch (e) { sprintBest = 0; }
   sprintEls.best.textContent = sprintBest;
+
+  const shuffle = (arr) => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
   function dropInJar(emoji, bonus) {
     const s = document.createElement('span');
@@ -1475,74 +1721,136 @@ document.addEventListener('DOMContentLoaded', () => {
     sprintEls.face.classList.add('is-bouncing');
   }
 
+  function showLevel() {
+    const L = SPRINT_LEVELS[sprintLevel];
+    sprintEls.level.textContent = `Level ${sprintLevel + 1} · ${L.name}`;
+    sprintEls.box.dataset.level = String(sprintLevel + 1);
+  }
+
+  // Draws an unused question from the current level, with the options shuffled.
+  function nextQuestion() {
+    const pool = sprintPool[sprintLevel];
+    let fresh = pool.filter(q => !sprintUsed.includes(q));
+    if (!fresh.length) { sprintUsed = sprintUsed.filter(q => !pool.includes(q)); fresh = pool; }
+    const item = fresh[Math.floor(Math.random() * fresh.length)];
+    sprintUsed.push(item);
+    const order = shuffle(item.options.map((_, i) => i));
+    return { q: item.q, options: order.map(i => item.options[i]), answer: order.indexOf(item.answer) };
+  }
+
+  function stopTimer() {
+    clearInterval(sprintTimerId);
+    sprintTimerId = null;
+  }
+
   function startSprint() {
-    sprintQs = [...sprintPool].sort(() => Math.random() - 0.5).slice(0, SPRINT_LEN);
-    sprintI = 0; sprintScore = 0; sprintStreak = 0;
+    stopTimer();
+    sprintQNum = 0; sprintScore = 0; sprintStreak = 0; sprintCorrect = 0; sprintLevel = 0; sprintTopLevel = 0;
+    sprintUsed = [];
     sprintEls.jar.innerHTML = '';
     sprintEls.score.textContent = '0';
     sprintEls.streak.textContent = '0';
     setFace('🙂');
+    showLevel();
     renderSprintQ();
   }
 
   function renderSprintQ() {
-    if (sprintI >= sprintQs.length) return endSprint();
-    const item = sprintQs[sprintI];
-    sprintEls.count.textContent = `Question ${sprintI + 1} of ${sprintQs.length}`;
+    if (sprintQNum >= SPRINT_LEN) return endSprint();
+    const L = SPRINT_LEVELS[sprintLevel];
+    const item = nextQuestion();
+    sprintEls.count.textContent = `Question ${sprintQNum + 1} of ${SPRINT_LEN} · worth ${L.points}`;
     sprintEls.area.innerHTML = `<p class="sprint__q">${item.q}</p><div class="sprint__opts"></div><p class="sprint__feedback" aria-live="polite"></p>`;
     const opts = sprintEls.area.querySelector('.sprint__opts');
     const fb = sprintEls.area.querySelector('.sprint__feedback');
+    let answered = false;
+
+    const finish = (idx) => {
+      if (answered) return;
+      answered = true;
+      stopTimer();
+      [...opts.children].forEach(c => c.disabled = true);
+      opts.children[item.answer].classList.add('is-correct');
+      let msg;
+      if (idx === item.answer) {
+        sprintScore += L.points; sprintStreak++; sprintCorrect++;
+        dropInJar(L.token);
+        msg = L.points > 1 ? `Right! +${L.points} smileys.` : 'Nice! A smiley for the jar.';
+        setFace(sprintLevel >= 2 ? '🤩' : '😄');
+        if (sprintStreak % 3 === 0) { sprintScore += 1; dropInJar('🌟', true); msg += ' Three in a row — bonus star!'; }
+        if (sprintCorrect % LEVEL_UP_EVERY === 0 && sprintLevel < SPRINT_LEVELS.length - 1) {
+          sprintLevel++;
+          sprintTopLevel = Math.max(sprintTopLevel, sprintLevel);
+          const N = SPRINT_LEVELS[sprintLevel];
+          msg += ` Level up! Next up: ${N.name}${N.time ? `, with a ${N.time}-second timer` : ', with four choices'}.`;
+          showLevel();
+          sprintEls.level.classList.remove('is-up'); void sprintEls.level.offsetWidth; sprintEls.level.classList.add('is-up');
+        }
+      } else {
+        sprintStreak = 0;
+        if (idx >= 0) opts.children[idx].classList.add('is-wrong');
+        setFace(idx === -1 ? '⏰' : '😅');
+        msg = `${idx === -1 ? "Time's up" : 'Not quite'} — it's "${item.options[item.answer]}".`;
+      }
+      fb.textContent = msg;
+      sprintEls.score.textContent = sprintScore;
+      sprintEls.streak.textContent = sprintStreak;
+      const next = document.createElement('button');
+      next.type = 'button';
+      next.className = 'btn btn--primary sprint__next';
+      next.textContent = sprintQNum === SPRINT_LEN - 1 ? 'See my jar' : 'Next question';
+      next.addEventListener('click', () => { sprintQNum++; renderSprintQ(); });
+      sprintEls.area.appendChild(next);
+      next.focus({ preventScroll: true });
+    };
+
     item.options.forEach((text, idx) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.className = 'sprint__opt';
       b.textContent = text;
-      b.addEventListener('click', () => {
-        [...opts.children].forEach(c => c.disabled = true);
-        opts.children[item.answer].classList.add('is-correct');
-        if (idx === item.answer) {
-          sprintScore++; sprintStreak++;
-          dropInJar('😊');
-          let msg = 'Nice! A smiley for the jar.';
-          if (sprintStreak % 3 === 0) { sprintScore++; dropInJar('🌟', true); msg = `Three in a row — bonus star!`; setFace('🤩'); }
-          else setFace('😄');
-          fb.textContent = msg;
-        } else {
-          sprintStreak = 0;
-          b.classList.add('is-wrong');
-          setFace('😅');
-          fb.textContent = `Not quite — it's "${item.options[item.answer]}".`;
-        }
-        sprintEls.score.textContent = sprintScore;
-        sprintEls.streak.textContent = sprintStreak;
-        const next = document.createElement('button');
-        next.type = 'button';
-        next.className = 'btn btn--primary sprint__next';
-        next.textContent = sprintI === sprintQs.length - 1 ? 'See my jar' : 'Next question';
-        next.addEventListener('click', () => { sprintI++; renderSprintQ(); });
-        sprintEls.area.appendChild(next);
-        next.focus();
-      });
+      b.addEventListener('click', () => finish(idx));
       opts.appendChild(b);
     });
+
+    // Timer only on Hard and Expert
+    stopTimer();
+    if (L.time) {
+      sprintEls.timer.hidden = false;
+      const endAt = Date.now() + L.time * 1000;
+      const tick = () => {
+        const left = Math.max(0, endAt - Date.now());
+        sprintEls.timerFill.style.width = (left / (L.time * 1000) * 100) + '%';
+        sprintEls.timer.classList.toggle('is-low', left < 4000);
+        if (left === 0) finish(-1);
+      };
+      tick();
+      sprintTimerId = setInterval(tick, 100);
+    } else {
+      sprintEls.timer.hidden = true;
+    }
   }
 
   function endSprint() {
+    stopTimer();
+    sprintEls.timer.hidden = true;
     const newBest = sprintScore > sprintBest;
     if (newBest) {
       sprintBest = sprintScore;
       sprintEls.best.textContent = sprintBest;
       try { localStorage.setItem(SPRINT_KEY, String(sprintBest)); } catch (e) { /* ignore */ }
     }
-    setFace(sprintScore >= 10 ? '🥳' : sprintScore >= 6 ? '😄' : '🙂');
+    const top = SPRINT_LEVELS[sprintTopLevel].name;
+    setFace(sprintTopLevel === 3 ? '🥳' : sprintTopLevel >= 1 ? '😄' : '🙂');
     sprintEls.count.textContent = 'Round done';
-    const line = sprintScore >= 10 ? 'Jar overflowing. You know your MYP.'
-      : sprintScore >= 6 ? 'Solid jar. A couple more and you\'re a pro.'
-      : 'Every smiley counts. Go again and beat it.';
-    sprintEls.area.innerHTML = `<p class="sprint__q">You collected ${sprintScore} smiley${sprintScore === 1 ? '' : 's'}${newBest ? ' — a new best!' : '.'}</p>
+    const line = sprintTopLevel === 3 ? 'You made it to Expert. That is serious MYP knowledge.'
+      : sprintTopLevel === 2 ? 'You reached Hard. Get three more right to unlock Expert.'
+      : sprintTopLevel === 1 ? 'You reached Medium. Keep a streak going to climb higher.'
+      : 'Get three right to move up a level. Go again!';
+    sprintEls.area.innerHTML = `<p class="sprint__q">${sprintScore} smiley${sprintScore === 1 ? '' : 's'}, highest level ${top}${newBest ? ' — a new best!' : '.'}</p>
       <p class="sprint__feedback">${line}</p>
       <button type="button" class="btn btn--primary" id="sprintAgain">Play again</button>`;
-    document.getElementById('sprintAgain').addEventListener('click', startSprint);
+    $('sprintAgain').addEventListener('click', startSprint);
   }
 
   startSprint();
