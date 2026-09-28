@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ascension Archive — IB Compass</title>
+<title>IB Compass — Your MYP guide</title>
 <meta name="description" content="A student's guide to surviving and thriving through the IB Middle Years Programme.">
 
 <!-- Google Fonts: Bricolage Grotesque for headings, Nunito for body -->
@@ -42,33 +42,44 @@
 <!-- ============ NAVBAR ============ -->
 <header class="navbar" id="navbar">
   <div class="navbar__inner">
-    <a href="#home" class="navbar__brand">Ascension&nbsp;Archive <span class="navbar__compass">IB Compass</span></a>
+    <a href="#home" class="navbar__brand" aria-label="IB Compass home"><span class="navbar__compass">IB Compass</span></a>
     <nav class="navbar__links">
-      <a href="#home" data-nav>Home</a>
-      <a href="#transitions" data-nav>Classes &amp; Tracks</a>
-      <a href="#subject-quiz" data-nav>Subject Quiz</a>
-      <a href="#planner" data-nav>Study Planner</a>
-      <a href="#play" data-nav>Smiley Sprint</a>
-      <a href="#footer" data-nav>Help</a>
+      <a href="#home" data-nav="home">Home</a>
+      <div class="nav-group">
+        <a href="#leap" data-nav="leap bridge choice" class="nav-group__top">MYP Stages <span aria-hidden="true">▾</span></a>
+        <div class="nav-group__menu">
+          <a href="#leap" data-nav="leap">🚀 The Leap · MYP 1</a>
+          <a href="#bridge" data-nav="bridge">🌉 The Bridge · MYP 2→3</a>
+          <a href="#choice" data-nav="choice">🧭 The Choice · MYP 3→4</a>
+        </div>
+      </div>
+      <a href="#guide" data-nav="guide">IB Guide</a>
+      <a href="#subject-quiz" data-nav="subject-quiz">Subject Quiz</a>
+      <a href="#planner" data-nav="planner">Study Planner</a>
+      <a href="#play" data-nav="play">Smiley Sprint</a>
+      <a href="#help" data-nav="help">Help</a>
     </nav>
     <button class="navbar__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
   </div>
   <nav class="navbar__mobile" id="navMobile">
-    <a href="#home" data-nav>Home</a>
-    <a href="#transitions" data-nav>Classes &amp; Tracks</a>
-    <a href="#subject-quiz" data-nav>Subject Quiz</a>
-    <a href="#planner" data-nav>Study Planner</a>
-    <a href="#play" data-nav>Smiley Sprint</a>
-    <a href="#footer" data-nav>Help</a>
+    <a href="#home" data-nav="home">Home</a>
+    <a href="#leap" data-nav="leap">🚀 The Leap · MYP 1</a>
+    <a href="#bridge" data-nav="bridge">🌉 The Bridge · MYP 2→3</a>
+    <a href="#choice" data-nav="choice">🧭 The Choice · MYP 3→4</a>
+    <a href="#guide" data-nav="guide">IB Guide</a>
+    <a href="#subject-quiz" data-nav="subject-quiz">Subject Quiz</a>
+    <a href="#planner" data-nav="planner">Study Planner</a>
+    <a href="#play" data-nav="play">Smiley Sprint</a>
+    <a href="#help" data-nav="help">Help</a>
   </nav>
 </header>
 
 <main>
 
 <!-- ============ HOME / HERO ============ -->
-<section id="home" class="section hero">
+<section id="home" class="section hero" data-page="home">
   <div class="glow glow--azure hero__glow-a" aria-hidden="true"></div>
   <div class="glow glow--cyan hero__glow-b" aria-hidden="true"></div>
 
@@ -111,20 +122,30 @@
       </div>
       <p class="year-picker__result" id="yearResult" aria-live="polite"></p>
     </div>
+
+    <div class="home-more">
+      <p class="year-picker__prompt">More in IB Compass</p>
+      <div class="home-more__grid">
+        <a href="#guide" class="home-more__card"><span aria-hidden="true">📘</span><strong>IB Guide</strong><em>Grading, criteria, projects and the DP</em></a>
+        <a href="#subject-quiz" class="home-more__card"><span aria-hidden="true">🧪</span><strong>Subject Quiz</strong><em>Ten questions to find your pathway</em></a>
+        <a href="#planner" class="home-more__card"><span aria-hidden="true">🗒️</span><strong>Study Planner</strong><em>Your week as sticky notes</em></a>
+        <a href="#play" class="home-more__card"><span aria-hidden="true">😄</span><strong>Smiley Sprint</strong><em>A quiz game that gets harder</em></a>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- ============ TRANSITIONS ============ -->
-<section id="transitions" class="section transitions">
+<section id="transitions" class="section transitions" data-page="leap bridge choice">
   <div class="glow glow--cyan transitions__glow" aria-hidden="true"></div>
   <div class="section__inner">
-    <p class="eyebrow">Classes &amp; Tracks</p>
-    <h2 class="section__title">Every transition, mapped out.</h2>
+    <p class="eyebrow">MYP stages</p>
+    <h2 class="section__title" id="stageTitle">The Leap: starting MYP 1.</h2>
 
     <div class="tabs" id="tabs" role="tablist">
-      <button class="tabs__btn is-active" data-tab="leap" role="tab" aria-selected="true">The Leap · MYP 1</button>
-      <button class="tabs__btn" data-tab="bridge" role="tab" aria-selected="false">The Bridge · MYP 2→3</button>
-      <button class="tabs__btn" data-tab="choice" role="tab" aria-selected="false">The Choice · MYP 3→4</button>
+      <a class="tabs__btn is-active" href="#leap" data-tab="leap" role="tab" aria-selected="true">🚀 The Leap · MYP 1</a>
+      <a class="tabs__btn" href="#bridge" data-tab="bridge" role="tab" aria-selected="false">🌉 The Bridge · MYP 2→3</a>
+      <a class="tabs__btn" href="#choice" data-tab="choice" role="tab" aria-selected="false">🧭 The Choice · MYP 3→4</a>
     </div>
 
     <!-- ---- TAB: THE LEAP ---- -->
@@ -189,6 +210,7 @@
           <button class="btn btn--ghost" id="memoryReplay">Replay</button>
         </div>
       </div>
+      <nav class="page-nav" aria-label="Stage navigation"><a href="#home" class="page-nav__link">‹ Home</a><a href="#bridge" class="page-nav__link page-nav__link--next">Next: The Bridge ›</a></nav>
     </article>
 
     <!-- ---- TAB: THE BRIDGE ---- -->
@@ -255,6 +277,7 @@
           <div id="bridgeQuizArea"></div>
         </div>
       </div>
+      <nav class="page-nav" aria-label="Stage navigation"><a href="#leap" class="page-nav__link">‹ The Leap</a><a href="#choice" class="page-nav__link page-nav__link--next">Next: The Choice ›</a></nav>
     </article>
 
     <!-- ---- TAB: THE CHOICE ---- -->
@@ -291,7 +314,7 @@
             <li><span>Week 1</span>List three subjects you look forward to and three you'd rather skip.</li>
             <li><span>Week 2</span>Try the "Which Doors Stay Open?" checker below with a career idea you're curious about.</li>
             <li><span>Week 3</span>Talk to a teacher or counselor about the pathway you're leaning toward.</li>
-            <li><span>Week 4</span>Take the full Subject Quiz further down this page.</li>
+            <li><span>Week 4</span>Take the full Subject Quiz on its own page (it's in the menu at the top).</li>
           </ul>
         </div>
       </div>
@@ -313,13 +336,14 @@
           <div class="game__score" id="worksScore"></div>
         </div>
       </div>
+      <nav class="page-nav" aria-label="Stage navigation"><a href="#bridge" class="page-nav__link">‹ The Bridge</a><a href="#subject-quiz" class="page-nav__link page-nav__link--next">Next: Subject Quiz ›</a></nav>
     </article>
 
   </div>
 </section>
 
 <!-- ============ SUBJECT QUIZ ============ -->
-<section id="subject-quiz" class="section subject-quiz">
+<section id="subject-quiz" class="section subject-quiz" data-page="subject-quiz">
   <div class="glow glow--azure subject-quiz__glow" aria-hidden="true"></div>
   <div class="section__inner">
     <p class="eyebrow">MYP 4–5 subject selection</p>
@@ -392,7 +416,7 @@
 </section>
 
 <!-- ============ PERSONAL STUDY PLANNER ============ -->
-<section id="planner" class="section planner">
+<section id="planner" class="section planner" data-page="planner">
   <div class="section__inner">
     <p class="eyebrow">Personal study planner</p>
     <h2 class="section__title">Tell it what's coming up. It'll write your study notes for each day.</h2>
@@ -480,7 +504,7 @@
 </section>
 
 <!-- ============ SMILEY SPRINT ============ -->
-<section id="play" class="section sprint-section">
+<section id="play" class="section sprint-section" data-page="play">
   <div class="section__inner">
     <p class="eyebrow">Quick play</p>
     <h2 class="section__title">Smiley Sprint: the higher you climb, the harder it gets.</h2>
@@ -507,10 +531,284 @@
   </div>
 </section>
 
-</main>
+<!-- ============ IB GUIDE ============ -->
+<section id="guide" class="section guide" data-page="guide">
+  <div class="section__inner">
+    <p class="eyebrow">IB Guide</p>
+    <h2 class="section__title">Everything about the IB, in one place.</h2>
+
+    <nav class="guide-jump" aria-label="Guide sections">
+      <button type="button" data-jump="g-transitions">Transitions</button>
+      <button type="button" data-jump="g-myp">MYP basics</button>
+      <button type="button" data-jump="g-subjects">Choosing subjects</button>
+      <button type="button" data-jump="g-assess">Formative vs summative</button>
+      <button type="button" data-jump="g-grading">Grading</button>
+      <button type="button" data-jump="g-projects">Projects</button>
+      <button type="button" data-jump="g-criteria">Criteria</button>
+      <button type="button" data-jump="g-dp">The DP</button>
+    </nav>
+
+    <!-- TRANSITIONS -->
+    <div class="guide-block" id="g-transitions">
+      <h3 class="guide-block__title">IB transitions, year by year</h3>
+      <p class="guide-block__lead">From PYP all the way to the Diploma Programme: what changes at each step.</p>
+      <ol class="stage-track">
+        <li class="stage" style="--stage:#DFF0FF">
+          <p class="stage__from">PYP 5 → MYP 1</p>
+          <ul>
+            <li>A big jump in structure.</li>
+            <li>Subjects become separate instead of blended together.</li>
+            <li>Grading becomes criteria-based.</li>
+            <li>More homework and more projects.</li>
+            <li>ATL skills like time management and research start to matter.</li>
+          </ul>
+        </li>
+        <li class="stage" style="--stage:#D8F7EA">
+          <p class="stage__from">MYP 2 → MYP 3</p>
+          <ul>
+            <li>The workload goes up.</li>
+            <li>More independent tasks.</li>
+            <li>Science and maths get harder.</li>
+            <li>Teachers expect clearer explanations and reasoning.</li>
+          </ul>
+        </li>
+        <li class="stage" style="--stage:#FFE1EE">
+          <p class="stage__from">MYP 3 → MYP 4</p>
+          <ul>
+            <li>The first "high school" level jump.</li>
+            <li>You start choosing subjects.</li>
+            <li>Assessments get more serious and criteria expectations get stricter.</li>
+            <li>Planning for the Personal Project begins.</li>
+          </ul>
+        </li>
+        <li class="stage" style="--stage:#FFF1C9">
+          <p class="stage__from">MYP 4 → MYP 5</p>
+          <ul>
+            <li>The heaviest workload in the MYP.</li>
+            <li>The Personal Project is a major focus.</li>
+            <li>MYP eAssessments, if your school takes part.</li>
+            <li>DP subject choices start here.</li>
+          </ul>
+        </li>
+        <li class="stage" style="--stage:#E7E0FF">
+          <p class="stage__from">MYP 5 → DP 1</p>
+          <ul>
+            <li>Six subjects, some at Higher Level and some at Standard Level.</li>
+            <li>The DP core starts: TOK, the Extended Essay and CAS.</li>
+            <li>Final exams and grades now count toward university.</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+
+    <!-- MYP BASICS -->
+    <div class="guide-block" id="g-myp">
+      <h3 class="guide-block__title">The MYP in a nutshell</h3>
+      <div class="fact-strip">
+        <div><strong>11–16</strong><span>age group</span></div>
+        <div><strong>5 years</strong><span>MYP 1 to MYP 5</span></div>
+        <div><strong>8</strong><span>subject groups</span></div>
+        <div><strong>50+ hours</strong><span>per subject, per year</span></div>
+      </div>
+      <div class="guide-cols">
+        <div class="guide-card">
+          <h4>The 8 subject groups</h4>
+          <ul class="tick-list">
+            <li>Language &amp; Literature</li>
+            <li>Language Acquisition</li>
+            <li>Individuals &amp; Societies</li>
+            <li>Sciences</li>
+            <li>Mathematics</li>
+            <li>Arts</li>
+            <li>Design</li>
+            <li>Physical &amp; Health Education</li>
+          </ul>
+        </div>
+        <div class="guide-card">
+          <h4>How learning works</h4>
+          <p><strong>Concept-based:</strong> you learn big ideas, not just facts to memorise.</p>
+          <p><strong>Global contexts:</strong> every unit links to one of six real-world themes: identities and relationships; orientation in space and time; personal and cultural expression; scientific and technical innovation; globalization and sustainability; fairness and development.</p>
+          <p><strong>ATL skills:</strong> five skill areas — thinking, research, communication, social and self-management.</p>
+        </div>
+        <div class="guide-card">
+          <h4>How you're assessed</h4>
+          <p>Most assessment happens in school, by your own teachers.</p>
+          <p>Some schools also take the optional <strong>MYP eAssessment</strong> in MYP 5: onscreen exams plus ePortfolios of coursework. It leads to the IB's MYP Certificate.</p>
+          <p class="guide-note">The IB's own research reports that MYP students tend to manage their learning well, connect lessons to the real world, and do well later in the DP.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBJECT CHOOSING -->
+    <div class="guide-block" id="g-subjects">
+      <h3 class="guide-block__title">Choosing subjects for MYP 4–5</h3>
+      <p class="guide-block__lead">The IB lets schools cut down from 8 subject groups to 6 in MYP 4–5. At our school you do that by picking the Balanced or Sciences pathway.</p>
+      <div class="guide-cols">
+        <div class="guide-card">
+          <h4>How to choose smartly</h4>
+          <ul class="tick-list">
+            <li>Pick subjects that lead toward the DP courses you might want.</li>
+            <li>Choose what you can keep up with for two whole years.</li>
+            <li>Mix it up: roughly two heavy, two medium and two lighter subjects.</li>
+            <li>Avoid stacking only high-content subjects. That's how burnout happens.</li>
+          </ul>
+        </div>
+        <div class="guide-card guide-card--wide">
+          <h4>Example focus subjects by goal</h4>
+          <div class="path-examples">
+            <div><p class="path-examples__name">STEM</p><p>Maths, Physics, Chemistry, Design</p></div>
+            <div><p class="path-examples__name">Medicine</p><p>Biology, Chemistry, Maths, Language &amp; Literature</p></div>
+            <div><p class="path-examples__name">Business</p><p>Business Studies or Economics, Maths, Language &amp; Literature, Design</p></div>
+            <div><p class="path-examples__name">Humanities</p><p>Individuals &amp; Societies, Language &amp; Literature, Arts, Language Acquisition</p></div>
+          </div>
+          <a class="btn btn--primary" href="#subject-quiz">Find your pathway in the Subject Quiz</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORMATIVE VS SUMMATIVE -->
+    <div class="guide-block" id="g-assess">
+      <h3 class="guide-block__title">Formative vs summative</h3>
+      <div class="versus">
+        <div class="versus__side versus__side--f">
+          <p class="versus__tag">Formative = practice</p>
+          <ul>
+            <li>Helps you learn and get feedback.</li>
+            <li>Usually doesn't count toward your final grade.</li>
+            <li>Examples: classwork, small quizzes, drafts.</li>
+          </ul>
+        </div>
+        <div class="versus__vs" aria-hidden="true">vs</div>
+        <div class="versus__side versus__side--s">
+          <p class="versus__tag">Summative = performance</p>
+          <ul>
+            <li>The graded task at the end of a unit.</li>
+            <li>Counts toward your term grade, marked on the criteria.</li>
+            <li>Examples: tests, essays, lab reports, projects.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="guide-note">Teachers use both to see how you're growing. Treat formatives as free practice for the summative.</p>
+    </div>
+
+    <!-- GRADING -->
+    <div class="guide-block" id="g-grading">
+      <h3 class="guide-block__title">How MYP grading works</h3>
+      <p class="guide-block__lead">You're not graded by percentage. You're graded on the quality of your skills, one criterion at a time.</p>
+      <div class="guide-cols">
+        <div class="guide-card">
+          <h4>Step by step</h4>
+          <ol class="step-list">
+            <li>Each subject has four criteria: A, B, C and D.</li>
+            <li>You get a level from 0 to 8 on each one.</li>
+            <li>The four levels are added up, out of 32.</li>
+            <li>That total converts into a final grade from 1 to 7.</li>
+          </ol>
+          <h4>What the levels mean</h4>
+          <div class="level-bands">
+            <span>1–2 Limited</span><span>3–4 Adequate</span><span>5–6 Substantial</span><span>7–8 Excellent</span>
+          </div>
+        </div>
+        <div class="guide-card">
+          <h4>Grade boundaries</h4>
+          <table class="grade-table">
+            <thead><tr><th>Total /32</th><th>Final grade</th></tr></thead>
+            <tbody>
+              <tr><td>1–5</td><td>1</td></tr><tr><td>6–9</td><td>2</td></tr>
+              <tr><td>10–14</td><td>3</td></tr><tr><td>15–18</td><td>4</td></tr>
+              <tr><td>19–23</td><td>5</td></tr><tr><td>24–27</td><td>6</td></tr>
+              <tr><td>28–32</td><td>7</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="guide-card calc">
+          <h4>Try it: grade calculator</h4>
+          <div class="calc__rows" id="calcRows"></div>
+          <p class="calc__out" aria-live="polite">Total <strong id="calcTotal">0</strong>/32 → Grade <strong class="calc__grade" id="calcGrade">–</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="guide-block" id="g-projects">
+      <h3 class="guide-block__title">The big projects</h3>
+      <div class="guide-cols">
+        <div class="guide-card">
+          <h4>Personal Project <span class="pill">MYP 5</span></h4>
+          <ol class="step-list">
+            <li>Choose a topic you care about and set a learning goal.</li>
+            <li>Research and plan.</li>
+            <li>Create a product.</li>
+            <li>Write a report about the process.</li>
+          </ol>
+          <p>Takes at least 25 hours. Assessed on three criteria, each out of 8: <strong>A Planning</strong>, <strong>B Applying skills</strong>, <strong>C Reflecting</strong>.</p>
+        </div>
+        <div class="guide-card">
+          <h4>Interdisciplinary Unit (IDU)</h4>
+          <p>Combines two or more subjects in one unit, so you can see how ideas connect in the real world.</p>
+          <h4>Community Project <span class="pill">MYP 3 or 4</span></h4>
+          <p>A project that meets a real need in a community. Some schools run it before the Personal Project.</p>
+        </div>
+        <div class="guide-card">
+          <h4>Design projects</h4>
+          <p>Every design task follows the design cycle:</p>
+          <div class="cycle">
+            <span>Inquire &amp; analyse</span><span>Develop ideas</span><span>Create the solution</span><span>Evaluate</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRITERIA -->
+    <div class="guide-block" id="g-criteria">
+      <h3 class="guide-block__title">Criteria for every subject</h3>
+      <p class="guide-block__lead">Pick a subject group to see what A, B, C and D mean there.</p>
+      <div class="crit-picker" id="critPicker" role="tablist" aria-label="Subject group"></div>
+      <div class="crit-grid" id="critGrid" aria-live="polite"></div>
+    </div>
+
+    <!-- DP -->
+    <div class="guide-block" id="g-dp">
+      <h3 class="guide-block__title">After the MYP: the Diploma Programme</h3>
+      <div class="fact-strip">
+        <div><strong>16–19</strong><span>age group</span></div>
+        <div><strong>6</strong><span>subjects</span></div>
+        <div><strong>3</strong><span>core parts</span></div>
+        <div><strong>45</strong><span>top possible score</span></div>
+      </div>
+      <div class="guide-cols">
+        <div class="guide-card">
+          <h4>Your six subjects</h4>
+          <p>One from each of these groups:</p>
+          <ul class="tick-list">
+            <li>Language &amp; Literature</li>
+            <li>Language Acquisition</li>
+            <li>Individuals &amp; Societies</li>
+            <li>Sciences</li>
+            <li>Mathematics</li>
+          </ul>
+          <p>The sixth is an Arts subject, or a second subject from one of the groups above.</p>
+        </div>
+        <div class="guide-card">
+          <h4>The core</h4>
+          <p><strong>TOK (Theory of Knowledge):</strong> thinking about how we know what we know.</p>
+          <p><strong>EE (Extended Essay):</strong> a 4,000-word research essay on a topic you choose.</p>
+          <p><strong>CAS (Creativity, Activity, Service):</strong> projects and activities outside the classroom.</p>
+        </div>
+        <div class="guide-card">
+          <h4>Scoring</h4>
+          <p>Each subject is graded 1 to 7, so six subjects give up to 42 points.</p>
+          <p>TOK and the EE together add up to 3 more, for a maximum of 45.</p>
+          <p class="guide-note">The Personal Project is the best practice you'll get for the Extended Essay.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <!-- ============ FOOTER / HELPFUL TIPS ============ -->
-<footer id="footer" class="footer">
+<section id="help" class="footer" data-page="help">
   <div class="glow glow--azure footer__glow-a" aria-hidden="true"></div>
   <div class="glow glow--cyan footer__glow-b" aria-hidden="true"></div>
 
@@ -538,11 +836,14 @@
 
         <div class="footer-links">
           <h3>Jump around</h3>
-          <a href="#home" data-nav>Home</a>
-          <a href="#transitions" data-nav>Classes &amp; Tracks</a>
-          <a href="#subject-quiz" data-nav>Subject Quiz</a>
-          <a href="#planner" data-nav>Study Planner</a>
-          <a href="#play" data-nav>Smiley Sprint</a>
+          <a href="#home">Home</a>
+          <a href="#leap">The Leap</a>
+          <a href="#bridge">The Bridge</a>
+          <a href="#choice">The Choice</a>
+          <a href="#guide">IB Guide</a>
+          <a href="#subject-quiz">Subject Quiz</a>
+          <a href="#planner">Study Planner</a>
+          <a href="#play">Smiley Sprint</a>
         </div>
 
         <div class="footer-links">
@@ -553,9 +854,16 @@
       </div>
     </div>
 
-    <p class="disclaimer">An independent student guide · Not affiliated with the International Baccalaureate Organization.</p>
   </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <p>IB Compass · An independent student guide · Not affiliated with the International Baccalaureate Organization.</p>
 </footer>
+
+
 
 <!-- ============ CHATBOT WIDGET ============ -->
 <div class="chatbot" id="chatbot">

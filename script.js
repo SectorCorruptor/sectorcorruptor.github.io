@@ -18,7 +18,7 @@
       at that endpoint instead of calling Google directly.
    ========================================================= */
 const GEMINI_CONFIG = {
-  API_KEY: "AQ.Ab8RN6J4WiaxWVMzi0_44yXOJu5nwUkN13AVofR1Wwf_O9mdGg",   // <-- put your key here
+  API_KEY: "PASTE_YOUR_GEMINI_API_KEY_HERE",   // <-- put your key here
   MODEL: "gemini-2.5-flash",                    // change model here if needed
   ENDPOINT: "https://generativelanguage.googleapis.com/v1beta/models"
 };
@@ -97,18 +97,51 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  tabButtons.forEach(btn => {
-    btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-  });
+  /* ---------------------------------------------------------
+     PAGES — the site shows one page at a time, picked by the
+     link in the address bar (#home, #leap, #guide …), so the
+     browser's back button works like on a normal website.
+     --------------------------------------------------------- */
+  const pages = [...document.querySelectorAll('[data-page]')];
+  const pageTitles = {
+    home: 'Home', leap: 'The Leap', bridge: 'The Bridge', choice: 'The Choice', guide: 'IB Guide',
+    'subject-quiz': 'Subject Quiz', planner: 'Study Planner', play: 'Smiley Sprint', help: 'Help'
+  };
+  const stageTitles = {
+    leap: 'The Leap: starting MYP 1.',
+    bridge: 'The Bridge: MYP 2 into MYP 3.',
+    choice: 'The Choice: picking your MYP 4–5 pathway.'
+  };
+  const oldLinks = { transitions: 'leap', footer: 'help', quiz: 'subject-quiz' }; // older links still work
+
+  function currentRoute() {
+    let r = decodeURIComponent(location.hash.slice(1)) || 'home';
+    r = oldLinks[r] || r;
+    return pageTitles[r] ? r : 'home';
+  }
+
+  function showPage() {
+    const route = currentRoute();
+    pages.forEach(pg => { pg.hidden = !pg.dataset.page.split(' ').includes(route); });
+    if (stageTitles[route]) {
+      switchTab(route);
+      document.getElementById('stageTitle').textContent = stageTitles[route];
+    }
+    document.querySelectorAll('[data-nav]').forEach(a => {
+      a.classList.toggle('is-current', a.dataset.nav.split(' ').includes(route));
+    });
+    document.title = route === 'home' ? 'IB Compass — Your MYP guide' : `${pageTitles[route]} · IB Compass`;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+
+  window.addEventListener('hashchange', showPage);
+  showPage();
 
   /* ---------------------------------------------------------
-     HERO — phase cards jump to the matching tab
+     HERO — phase cards open their stage page
      --------------------------------------------------------- */
   document.querySelectorAll('.phase-card').forEach(card => {
-    card.addEventListener('click', () => {
-      switchTab(card.dataset.target);
-      document.getElementById('transitions').scrollIntoView({ behavior: 'smooth' });
-    });
+    card.addEventListener('click', () => { location.hash = card.dataset.target; });
   });
 
   /* ---------------------------------------------------------
@@ -118,27 +151,27 @@ document.addEventListener('DOMContentLoaded', () => {
     '1': {
       text: "You're in MYP 1 — welcome to the biggest jump of the programme.",
       linkText: 'See The Leap',
-      target: 'transitions', tab: 'leap'
+      route: 'leap'
     },
     '2': {
       text: "You're in MYP 2 — enjoy it. MYP 3 (The Bridge) is next, and it's worth a sneak peek.",
       linkText: 'Preview The Bridge',
-      target: 'transitions', tab: 'bridge'
+      route: 'bridge'
     },
     '3': {
       text: "You're in MYP 3 — you're mid-Bridge, and The Choice is right around the corner.",
       linkText: 'See The Bridge',
-      target: 'transitions', tab: 'bridge'
+      route: 'bridge'
     },
     '4': {
       text: "You're in MYP 4 — your pathway's picked. Time to fine-tune your subject plan.",
       linkText: 'Go to the Subject Quiz',
-      target: 'subject-quiz', tab: null
+      route: 'subject-quiz'
     },
     '5': {
       text: "You're in MYP 5 — almost through! The Subject Quiz can still help you double check your mix.",
       linkText: 'Go to the Subject Quiz',
-      target: 'subject-quiz', tab: null
+      route: 'subject-quiz'
     }
   };
 
@@ -150,11 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
       yearButtons.forEach(b => b.classList.remove('is-active'));
       btn.classList.add('is-active');
       const info = yearInfo[btn.dataset.year];
-      yearResult.innerHTML = `${info.text} <a href="#${info.target}" id="yearJumpLink">${info.linkText} →</a>`;
-      document.getElementById('yearJumpLink').addEventListener('click', (e) => {
-        if (info.tab) { e.preventDefault(); switchTab(info.tab); }
-        document.getElementById(info.target).scrollIntoView({ behavior: 'smooth' });
-      });
+      yearResult.innerHTML = `${info.text} <a href="#${info.route}">${info.linkText} →</a>`;
     });
   });
 
@@ -922,6 +951,82 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('builderReset').addEventListener('click', buildBuilder);
 
+    /* ===========================================================
+     IB GUIDE — section jump buttons, criteria picker,
+     grade calculator
+     =========================================================== */
+  document.querySelectorAll('[data-jump]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById(btn.dataset.jump).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  const criteriaData = {
+    'Language & Literature': ['Analysing', 'Organizing', 'Producing text', 'Using language'],
+    'Language Acquisition': ['Listening', 'Reading', 'Speaking', 'Writing'],
+    'Individuals & Societies': ['Knowing and understanding', 'Investigating', 'Communicating', 'Thinking critically'],
+    'Sciences': ['Knowing and understanding', 'Inquiring and designing', 'Processing and evaluating', 'Reflecting on the impacts of science'],
+    'Mathematics': ['Knowing and understanding', 'Investigating patterns', 'Communicating', 'Applying mathematics in real-life contexts'],
+    'Arts': ['Investigating', 'Developing', 'Creating or performing', 'Evaluating'],
+    'Design': ['Inquiring and analysing', 'Developing ideas', 'Creating the solution', 'Evaluating'],
+    'Physical & Health Education': ['Knowing and understanding', 'Planning for performance', 'Applying and performing', 'Reflecting and improving performance']
+  };
+  const critHints = {
+    'Language & Literature': ['How well you pick apart a text and its choices.', 'How clearly you structure your ideas.', 'How creative and well-developed your own writing is.', 'How accurate and effective your language is.'],
+    'Language Acquisition': ['Understanding spoken texts.', 'Understanding written texts.', 'Talking in the language.', 'Writing in the language.'],
+    'Individuals & Societies': ['What you know about the topic.', 'Research: your question, plan and sources.', 'Presenting information clearly, with references.', 'Weighing up evidence and different viewpoints.'],
+    'Sciences': ['Knowing the science and using it to solve problems.', 'Planning an experiment: question, hypothesis, method.', 'Handling data and judging your results.', 'How science affects people and the world.'],
+    'Mathematics': ['Solving problems with the maths you know.', 'Spotting and describing patterns.', 'Showing your working and using correct notation.', 'Using maths on a real situation.'],
+    'Arts': ['Researching art forms, artists and genres.', 'Building your skills and ideas.', 'Making or performing the final piece.', 'Reflecting on your work and growth.'],
+    'Design': ['Understanding the problem and researching it.', 'Specifications and design ideas.', 'Planning and making the solution.', 'Testing it and suggesting improvements.'],
+    'Physical & Health Education': ['Knowledge about health and fitness.', 'Planning to improve performance.', 'Using your skills in action.', 'Looking back and setting goals.']
+  };
+  const critPicker = document.getElementById('critPicker');
+  const critGrid = document.getElementById('critGrid');
+  function showCriteria(subject) {
+    critPicker.querySelectorAll('button').forEach(b => {
+      const on = b.dataset.subject === subject;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-selected', String(on));
+    });
+    critGrid.innerHTML = criteriaData[subject].map((name, i) => `
+      <div class="crit-card">
+        <span class="crit-card__letter">${'ABCD'[i]}</span>
+        <p class="crit-card__name">${name}</p>
+        <p class="crit-card__hint">${critHints[subject][i]}</p>
+      </div>`).join('');
+  }
+  Object.keys(criteriaData).forEach(subject => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('role', 'tab');
+    b.dataset.subject = subject;
+    b.textContent = subject;
+    b.addEventListener('click', () => showCriteria(subject));
+    critPicker.appendChild(b);
+  });
+  showCriteria('Sciences');
+
+  // Grade calculator: four criteria levels → total /32 → MYP grade 1–7
+  const GRADE_BOUNDS = [[1, 5, 1], [6, 9, 2], [10, 14, 3], [15, 18, 4], [19, 23, 5], [24, 27, 6], [28, 32, 7]];
+  const calcRows = document.getElementById('calcRows');
+  ['A', 'B', 'C', 'D'].forEach(letter => {
+    const row = document.createElement('label');
+    row.className = 'calc__row';
+    row.innerHTML = `<span>Criterion ${letter}</span>
+      <select aria-label="Criterion ${letter} level">${Array.from({ length: 9 }, (_, n) => `<option value="${n}">${n}</option>`).join('')}</select>`;
+    calcRows.appendChild(row);
+  });
+  function updateCalc() {
+    const total = [...calcRows.querySelectorAll('select')].reduce((a, sel) => a + +sel.value, 0);
+    const band = GRADE_BOUNDS.find(([lo, hi]) => total >= lo && total <= hi);
+    document.getElementById('calcTotal').textContent = total;
+    document.getElementById('calcGrade').textContent = band ? band[2] : '–';
+  }
+  calcRows.addEventListener('change', updateCalc);
+  [5, 6, 4, 6].forEach((v, i) => { calcRows.querySelectorAll('select')[i].value = v; });
+  updateCalc();
+
   /* ===========================================================
      FOOTER — FAQ knowledge base
      =========================================================== */
@@ -1088,10 +1193,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     parts.push('MYP 4-5 subject pathways: Balanced pathway = two sciences, two humanities, one arts/PHE subject, one design/PHE subject (keeps the most doors open). Sciences pathway = all three sciences, two humanities, one arts/design subject (for medicine, engineering, or pure science).');
 
+    const guideText = document.getElementById('guide')?.textContent.replace(/\s+/g, ' ').trim();
+    if (guideText) parts.push('IB GUIDE PAGE: ' + guideText);
+
     parts.push('Frequently asked questions on this site:');
     faqData.forEach(item => parts.push(`Q: ${item.q}\nA: ${item.a}`));
 
-    return parts.join('\n\n').slice(0, 14000); // keep the prompt a sane size
+    return parts.join('\n\n').slice(0, 20000); // keep the prompt a sane size
   }
 
   async function sendToGemini(userText) {
@@ -1099,7 +1207,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return { error: true, text: "The chat assistant isn't connected yet — add a Gemini API key in script.js (look for GEMINI_CONFIG near the top of the file) to turn this on." };
     }
 
-    const systemPrompt = `You are the built-in assistant for a student website called "Ascension Archive," a guide to the IB Middle Years Programme (MYP). Speak in a friendly, plain-spoken way for students aged 10-16 — short sentences, no unexplained jargon. Answer using ONLY the site content provided below. Keep answers to 2-5 sentences unless the student asks for more. If something isn't covered by the site content, say so honestly rather than guessing, and suggest which part of the site (Home, Classes & Tracks, Subject Quiz, or Helpful Tips) might help instead.\n\nSITE CONTENT:\n${buildSiteContext()}`;
+    const systemPrompt = `You are the built-in assistant for a student website called "Ascension Archive," a guide to the IB Middle Years Programme (MYP). Speak in a friendly, plain-spoken way for students aged 10-16 — short sentences, no unexplained jargon. Answer using ONLY the site content provided below. Keep answers to 2-5 sentences unless the student asks for more. If something isn't covered by the site content, say so honestly rather than guessing, and suggest which page of the site (Home, The Leap, The Bridge, The Choice, IB Guide, Subject Quiz, Study Planner, Smiley Sprint, or Help) might help instead.\n\nSITE CONTENT:\n${buildSiteContext()}`;
 
     const contents = chatHistory.map(m => ({ role: m.role, parts: [{ text: m.text }] }));
     contents.push({ role: 'user', parts: [{ text: userText }] });
