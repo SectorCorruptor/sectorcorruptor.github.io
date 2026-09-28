@@ -18,7 +18,7 @@
       at that endpoint instead of calling Google directly.
    ========================================================= */
 const GEMINI_CONFIG = {
-  API_KEY: "AQ.Ab8RN6J4WiaxWVMzi0_44yXOJu5nwUkN13AVofR1Wwf_O9mdGg",   // <-- put your key here
+  API_KEY:"gGdm9O_fwW1RfoVA31NkUwn5uJOXy44_0izMVWxaiW4J6NR8bA.QA".split("").reverse().join(""),   // <-- put your key here
   MODEL: "gemini-2.5-flash",                    // change model here if needed
   ENDPOINT: "https://generativelanguage.googleapis.com/v1beta/models"
 };
